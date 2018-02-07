@@ -1,0 +1,8 @@
+mysql:
+ image: mysql:latest
+ environment:
+   MYSQL_ROOT_PASSWORD: mypassword
+ ports:
+   - 3306:3306
+ volumes:
+   - ./database_scripts:/docker-entrypoint-initdb.d
