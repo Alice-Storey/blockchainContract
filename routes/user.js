@@ -68,6 +68,45 @@ exports.dashboard = function(req, res, next){
    });
 };
 
+//-----------------------------------------------received page functionality----------------------------------------------
+
+exports.received = function(req, res, next){
+   var user =  req.session.user,
+   userId = req.session.userId;
+   console.log('userId='+userId);
+
+   if(userId == null){
+      res.redirect("/login");
+      return;
+   }
+
+   var sql="SELECT * FROM `blockchaincontract`.`users` WHERE `id`='"+userId+"'";
+
+   db.query(sql, function(err, results){
+      res.render('received.ejs', {user:user});
+   });
+
+};
+
+//-----------------------------------------------send page functionality----------------------------------------------
+
+exports.send = function(req, res, next){
+   var user =  req.session.user,
+   userId = req.session.userId;
+   console.log('userId='+userId);
+
+   if(userId == null){
+      res.redirect("/login");
+      return;
+   }
+
+   var sql="SELECT * FROM `blockchaincontract`.`users` WHERE `id`='"+userId+"'";
+
+   db.query(sql, function(err, results){
+      res.render('send.ejs', {user:user});
+   });
+};
+
 //------------------------------------logout functionality----------------------------------------------
 exports.logout=function(req,res){
    req.session.destroy(function(err) {
