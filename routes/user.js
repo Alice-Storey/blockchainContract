@@ -2,13 +2,14 @@
 exports.signup = function(req, res){
    message = '';
    if(req.method == "POST"){
-      var post  = req.body;
-      var name= post.user_name;
-      var pass= post.password;
-      var fname= post.first_name;
-      var lname= post.last_name;
-      var mob= post.mob_no;
-      var sql = "INSERT INTO `blockchaincontract`.`users`(`first_name`,`last_name`,`mob_no`,`user_name`, `password`) VALUES ('" + fname + "','" + lname + "','" + mob + "','" + name + "','" + pass + "')";
+      var post = req.body;
+      var name = post.user_name;
+      var pass = post.password;
+      var fname = post.first_name;
+      var lname = post.last_name;
+      var mob = post.mob_no;
+      var address_key = post.address_key;
+      var sql = "INSERT INTO `blockchaincontract`.`users`(`first_name`,`last_name`,`mob_no`,`user_name`, `password`, `address_key`) VALUES ('" + fname + "','" + lname + "','" + mob + "','" + name + "','" + pass + "','" + address_key + "')";
       var query = db.query(sql, function(err, result) {
          message = "Succesfully! Your account has been created.";
          console.log('Query : ', sql);
@@ -82,7 +83,7 @@ exports.received = function(req, res, next){
 
    var sql="SELECT * FROM `blockchaincontract`.`users` WHERE `id`='"+userId+"'";
 
-   db.query(sql, function(err, results){
+    db.query(sql, function(err, results){
       res.render('received.ejs', {user:user});
    });
 
@@ -91,20 +92,28 @@ exports.received = function(req, res, next){
 //-----------------------------------------------send page functionality----------------------------------------------
 
 exports.send = function(req, res, next){
-   var user =  req.session.user,
-   userId = req.session.userId;
-   console.log('userId='+userId);
+    var user =  req.session.user,
+    userId = req.session.userId;
+    console.log('userId='+userId);
 
-   if(userId == null){
-      res.redirect("/login");
-      return;
-   }
+    if(userId == null){
+       res.redirect("/login");
+       return;
+    }
 
-   var sql="SELECT * FROM `blockchaincontract`.`users` WHERE `id`='"+userId+"'";
+    res.render('send.ejs', {user:user});
+};
 
-   db.query(sql, function(err, results){
-      res.render('send.ejs', {user:user});
-   });
+exports.load_recipients = function(req, res, next){
+    var user =  req.session.user,
+    userId = req.session.userId;
+    console.log('userId='+userId);
+
+    var sql="SELECT * FROM `blockchaincontract`.`users` WHERE `id`<>'"+userId+"' order by last_name asc";
+
+    db.query(sql, function(err, results){
+        res.send(results);
+    });
 };
 
 //------------------------------------logout functionality----------------------------------------------

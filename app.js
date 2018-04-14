@@ -49,5 +49,6 @@ app.get('/home/received', user.received);//call for received page
 app.get('/home/send', user.send);//call for received page
 app.get('/home/logout', user.logout);//call for logout
 app.get('/home/profile',user.profile);//to render users profile
+app.post('/api/1/load_recipients', user.load_recipients);
 //Middleware
 app.listen(8080)
