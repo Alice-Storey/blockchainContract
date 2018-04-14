@@ -11,5 +11,6 @@ CREATE TABLE IF NOT EXISTS `blockchaincontract`.`users` (
   `mob_no` varchar(15) NOT NULL,
   `user_name` varchar(20) NOT NULL,
   `password` varchar(15) NOT NULL,
+  `address_key` varchar(50),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=4 ;
