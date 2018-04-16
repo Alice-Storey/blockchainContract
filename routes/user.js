@@ -8,8 +8,8 @@ exports.signup = function(req, res){
       var fname = post.first_name;
       var lname = post.last_name;
       var mob = post.mob_no;
-      var address_key = post.address_key;
-      var sql = "INSERT INTO `blockchaincontract`.`users`(`first_name`,`last_name`,`mob_no`,`user_name`, `password`, `address_key`) VALUES ('" + fname + "','" + lname + "','" + mob + "','" + name + "','" + pass + "','" + address_key + "')";
+      var public_key = post.public_key;
+      var sql = "INSERT INTO `blockchaincontract`.`users`(`first_name`,`last_name`,`mob_no`,`user_name`, `password`, `public_key`) VALUES ('" + fname + "','" + lname + "','" + mob + "','" + name + "','" + pass + "','" + public_key + "')";
       var query = db.query(sql, function(err, result) {
          message = "Succesfully! Your account has been created.";
          console.log('Query : ', sql);

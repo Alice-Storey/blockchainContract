@@ -27,7 +27,7 @@
         var data_refreshed = function(data){
             console.log(data);
             data.forEach( function(user){
-                var dropentry = "<option value='"+user.address_key+"' id='uid"+user.id+"'>"+
+                var dropentry = "<option value='"+user.public_key+"' id='uid"+user.id+"'>"+
                     user.last_name+", "+user.first_name+"</option>";
                 $("#recipients").append(dropentry);
             });

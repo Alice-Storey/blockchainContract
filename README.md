@@ -1,5 +1,5 @@
-Run/Create MySQL Database
+# Run/Create MySQL Database
 -> (sudo) docker-compose up
 
-To run the app
+# To run the app
 -> node app.js
