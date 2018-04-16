@@ -3,6 +3,42 @@
    <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
         <h1>Send</h1>
-        <button onclick="myFunction()" type="button">Click Me!</button>
+        <button onclick="refresh()" type="button" id="refresh">Refresh</button>
+    <select id="recipients"></select>
+    <input type="file" id="contract"></input>
+    <button onclick="send_contract()" type="button" id="send_contract">Send</button>
+
+
       </div>
+
+<script>
+    $( function() {
+        refresh();
+    });
+
+    function refresh() {
+
+        $("#recipients").empty();
+
+        var text = "(Select Recipient...)";
+        var optionData = "<option value='"+text+"' id='"+text+"'>"+text+"</option>";
+        $("#recipients").append(optionData);
+
+        var data_refreshed = function(data){
+            console.log(data);
+            data.forEach( function(user){
+                var dropentry = "<option value='"+user.address_key+"' id='uid"+user.id+"'>"+
+                    user.last_name+", "+user.first_name+"</option>";
+                $("#recipients").append(dropentry);
+            });
+        };
+        $.post("/api/1/load_recipients", null, data_refreshed);
+
+    }
+
+    function send_contract() {
+
+    }
+</script>
+
     <%- include footer %>
