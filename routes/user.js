@@ -8,8 +8,8 @@ exports.signup = function(req, res){
       var fname = post.first_name;
       var lname = post.last_name;
       var mob = post.mob_no;
-      var address_key = post.address_key;
-      var sql = "INSERT INTO `blockchaincontract`.`users`(`first_name`,`last_name`,`mob_no`,`user_name`, `password`, `address_key`) VALUES ('" + fname + "','" + lname + "','" + mob + "','" + name + "','" + pass + "','" + address_key + "')";
+      var public_key = post.public_key;
+      var sql = "INSERT INTO `blockchaincontract`.`users`(`first_name`,`last_name`,`mob_no`,`user_name`, `password`, `public_key`) VALUES ('" + fname + "','" + lname + "','" + mob + "','" + name + "','" + pass + "','" + public_key + "')";
       var query = db.query(sql, function(err, result) {
          message = "Succesfully! Your account has been created.";
          console.log('Query : ', sql);
@@ -81,13 +81,25 @@ exports.received = function(req, res, next){
       return;
    }
 
-   var sql="SELECT * FROM `blockchaincontract`.`users` WHERE `id`='"+userId+"'";
+   //var sql="SELECT * FROM `blockchaincontract`.`users` WHERE `id`='"+userId+"'";
 
     db.query(sql, function(err, results){
       res.render('received.ejs', {user:user});
    });
 
 };
+
+exports.load_contracts = function(req, res, next) {
+    var user =  req.session.user,
+    userId = req.session.userId;
+    console.log('userId='+userId);
+}
+
+exports.sign_contract = function(req, res, next) {
+    var user =  req.session.user,
+    userId = req.session.userId;
+    console.log('userId='+userId);
+}
 
 //-----------------------------------------------send page functionality----------------------------------------------
 
@@ -150,3 +162,11 @@ exports.editprofile=function(req,res){
       res.render('edit_profile.ejs',{data:results});
    });
 };
+
+exports.generate_keys=function(req,res){
+   var userId = req.session.userId;
+   if(userId == null){
+      res.redirect("/login");
+      return;
+   }
+}
