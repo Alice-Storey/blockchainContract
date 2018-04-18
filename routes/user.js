@@ -81,13 +81,25 @@ exports.received = function(req, res, next){
       return;
    }
 
-   var sql="SELECT * FROM `blockchaincontract`.`users` WHERE `id`='"+userId+"'";
+   //var sql="SELECT * FROM `blockchaincontract`.`users` WHERE `id`='"+userId+"'";
 
     db.query(sql, function(err, results){
       res.render('received.ejs', {user:user});
    });
 
 };
+
+exports.load_contracts = function(req, res, next) {
+    var user =  req.session.user,
+    userId = req.session.userId;
+    console.log('userId='+userId);
+}
+
+exports.sign_contract = function(req, res, next) {
+    var user =  req.session.user,
+    userId = req.session.userId;
+    console.log('userId='+userId);
+}
 
 //-----------------------------------------------send page functionality----------------------------------------------
 
@@ -150,3 +162,11 @@ exports.editprofile=function(req,res){
       res.render('edit_profile.ejs',{data:results});
    });
 };
+
+exports.generate_keys=function(req,res){
+   var userId = req.session.userId;
+   if(userId == null){
+      res.redirect("/login");
+      return;
+   }
+}

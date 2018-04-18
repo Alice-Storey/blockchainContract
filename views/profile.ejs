@@ -21,7 +21,10 @@
                   </tr>
                 </tbody>
               </table>
+             <!--
               <button onclick="openWin()">Generate Key Pair</button>
+                -->
+                <button onclick="generate_keys()" type="button" id="generate_keys">Generate Keys</button>
             </div>
           </div>
         </div>
@@ -29,6 +32,19 @@
 <script>
 function openWin() {
     myWindow = window.open("", "myWindow", "width=400,height=400");   // Opens a new window
+
+    function generate_keys() {
+
+        //implementation
+
+        var keys_generated = function(data){
+            console.log(data);
+        }
+        $.post("/api/1/generate_keys", null, keys_generated);
+    }
+    $( function() {
+        generate_keys();
+    });
 }
 </script>
  <%- include footer %>

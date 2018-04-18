@@ -1,8 +1,49 @@
 <html lang="en">
    <%- include header %>
    <!-- Main component for a primary marketing message or call to action -->
-      <div class="jumbotron">
+    <div class="jumbotron">
         <h1>Received</h1>
         <p>Received</p>
-      </div>
+
+        <button onclick="refresh()" type="button" id="refresh">Refresh</button>
+        <button onclick="sign_contract()" type="button" id="sign_contract">Sign</button>
+
+    </div>
+
+    <script>
+        $( function() {
+            refresh();
+        });
+
+        function refresh() {
+
+            //implementation
+
+            var data_refreshed = function(data){
+                console.log(data);
+            }
+
+            $.post("/api/1/load_contracts", null, data_refreshed);
+        }
+        $( function() {
+            refresh();
+        });
+
+        function sign_contract() {
+
+            //implementation
+
+            var contract_signed = function(data){
+                console.log(data);
+            }
+
+            $.post("/api/1/sign_contract", null, contract_signed);
+        }
+        $( function() {
+            sign_contract();
+        });
+
+
+    </script>
+
     <%- include footer %>
