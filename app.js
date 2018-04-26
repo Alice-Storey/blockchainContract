@@ -7,6 +7,8 @@ var express = require('express')
   , http = require('http')
   , path = require('path');
 
+
+
 //var methodOverride = require('method-override');
 var session = require('express-session');
 var app = express();
@@ -18,6 +20,7 @@ var connection = mysql.createConnection({
               password : 'mypassword',
               database : 'blockchaincontract'
             });
+
 
 connection.connect();
 
@@ -47,11 +50,16 @@ app.post('/login', user.login);//call for login post
 app.get('/home/dashboard', user.dashboard);//call for dashboard page after login
 app.get('/home/received', user.received);//call for received page
 app.get('/home/send', user.send);//call for received page
+app.post('/home/send', user.send);
 app.get('/home/logout', user.logout);//call for logout
 app.get('/home/profile',user.profile);//to render users profile
-app.post('/api/1/load_recipients', user.load_recipients);
+app.post('/api/1/load_recipients', user.load_recipients); //get list of recipients with keys
 app.post('/api/1/load_contracts', user.load_contracts);
 app.post('/api/1/sign_contract', user.sign_contract);
-app.post('/api/1/generate_keys', user.generate_keys);
+
+//alice
+//app.post('/api/1/generate_keys', user.generate_keys);
+//app.post('/api/1/upload_contract', user.upload_contract);
+
 //Middleware
 app.listen(8080)

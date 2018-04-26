@@ -3,12 +3,18 @@
     <!-- Main component for a primary marketing message or call to action -->
     <div class="jumbotron">
         <h1>Send</h1>
-        <button onclick="refresh()" type="button" id="refresh">Refresh</button>
-        <select id="recipients"></select>
-        <input type="file" id="contract"></input>
-        <br><button onclick="send_contract()" type="button" id="send_contract">Send</button>
 
 
+        <form id="sendform" class="form-horizontal" role="form" method="post" action="/home/send">
+
+            <button onclick="refresh()" type="button" id="refresh">Refresh</button>
+            <select id="recipients" name="recipients"></select>
+            <br><br>
+            Upload contract: <input type="file" id="contract_file" name="contract_file"></input>
+            (must be plaintext and less than 512KB)
+            <br><br><input type="submit" value="Send" id="send_contract">
+
+        </form>
     </div>
 
 <script>
@@ -26,16 +32,15 @@
         var data_refreshed = function(data){
             console.log(data);
             data.forEach( function(user){
-                var dropentry = "<option value='"+user.public_key+"' id='uid"+user.id+"'>"+user.last_name+", "+user.first_name+"</option>";
+                var dropentry = "<option value='"+user.public_key+"' id='uid"+user.id+"'>"+user.email+"</option>";
                 $("#recipients").append(dropentry);
             });
         };
         $.post("/api/1/load_recipients", null, data_refreshed);
     }
 
-    function send_contract() {
 
-    }
+
 </script>
 
     <%- include footer %>

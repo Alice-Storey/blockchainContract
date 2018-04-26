@@ -7,9 +7,9 @@ exports.signup = function(req, res){
       var pass = post.password;
       var fname = post.first_name;
       var lname = post.last_name;
-      var mob = post.mob_no;
-      var public_key = post.public_key;
-      var sql = "INSERT INTO `blockchaincontract`.`users`(`first_name`,`last_name`,`mob_no`,`user_name`, `password`, `public_key`) VALUES ('" + fname + "','" + lname + "','" + mob + "','" + name + "','" + pass + "','" + public_key + "')";
+      //var public_key = post.public_key;
+      var email = post.email;
+      var sql = "INSERT INTO `blockchaincontract`.`users` (`first_name`,`last_name`,`email`,`user_name`, `password`) VALUES ('" + fname + "','" + lname + "','" + email + "','" + name + "','" + pass + "')";
       var query = db.query(sql, function(err, result) {
          message = "Succesfully! Your account has been created.";
          console.log('Query : ', sql);
@@ -28,6 +28,7 @@ exports.login = function(req, res){
    if(req.method == "POST"){
       var post  = req.body;
       var name= post.user_name;
+      console.log(name);
       var pass= post.password;
       var sql="SELECT id, first_name, last_name, user_name FROM `blockchaincontract`.`users` WHERE `user_name`='"+name+"' and password = '"+pass+"'";
 
@@ -81,7 +82,7 @@ exports.received = function(req, res, next){
       return;
    }
 
-   //var sql="SELECT * FROM `blockchaincontract`.`users` WHERE `id`='"+userId+"'";
+   var sql="SELECT * FROM `blockchaincontract`.`users` WHERE `id`='"+userId+"'";
 
     db.query(sql, function(err, results){
       res.render('received.ejs', {user:user});
@@ -107,13 +108,36 @@ exports.send = function(req, res, next){
     var user =  req.session.user,
     userId = req.session.userId;
     console.log('userId='+userId);
+    fs = require('fs');
 
-    if(userId == null){
-       res.redirect("/login");
-       return;
+    if(req.method == "POST"){
+       var post = req.body;
+       //var recipient = post.recipients.value;
+       var file = post.contract_file;
+       //console.log("recipient:"+recipient);
+       console.log(file);
+
+       fs.readFile(file, function(err,data){
+           if (err) {
+               console.log("error: "+err);
+               throw err;
+           }
+           content = data;
+           console.log(content);
+       });
+
+
+       message = "Contract sent.";
+       res.render('send.ejs',{message: message});
+   }
+   else {
+        if(userId == null){
+           res.redirect("/login");
+           return;
+        }
+
+        res.render('send.ejs', {user:user});
     }
-
-    res.render('send.ejs', {user:user});
 };
 
 exports.load_recipients = function(req, res, next){
