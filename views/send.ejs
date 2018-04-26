@@ -5,7 +5,7 @@
         <h1>Send</h1>
 
 
-        <form id="sendform" class="form-horizontal" role="form" method="post" action="/home/send">
+        <form id="sendform" class="form-horizontal" role="form" method="POST" action="/home/send" enctype="multipart/form-data">
 
             <button onclick="refresh()" type="button" id="refresh">Refresh</button>
             <select id="recipients" name="recipients"></select>
@@ -32,7 +32,7 @@
         var data_refreshed = function(data){
             console.log(data);
             data.forEach( function(user){
-                var dropentry = "<option value='"+user.public_key+"' id='uid"+user.id+"'>"+user.email+"</option>";
+                var dropentry = "<option value='"+user.id+"' id='uid"+user.id+"'>"+user.email+"</option>";
                 $("#recipients").append(dropentry);
             });
         };

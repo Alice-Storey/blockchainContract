@@ -108,27 +108,39 @@ exports.send = function(req, res, next){
     var user =  req.session.user,
     userId = req.session.userId;
     console.log('userId='+userId);
-    fs = require('fs');
+
 
     if(req.method == "POST"){
-       var post = req.body;
-       //var recipient = post.recipients.value;
-       var file = post.contract_file;
-       //console.log("recipient:"+recipient);
-       console.log(file);
+        //var multer = require('multer'); // v1.0.5
+        //var upload = multer(); // for parsing multipart/form-data
+        var post = req.body;
+        var recipient = post.recipients;
+        var file = req.files[0].buffer;
+        var filesize = req.files[0].size;
 
-       fs.readFile(file, function(err,data){
-           if (err) {
-               console.log("error: "+err);
-               throw err;
-           }
-           content = data;
-           console.log(content);
-       });
+        console.log("file size: " + filesize);
+        console.log(String(file));
+        console.log("sending to uid "+recipient);
+        //console.log(req);
+        var sql="SELECT * FROM `blockchaincontract`.`users` WHERE `id`='"+recipient+"' order by last_name asc limit 1";
 
+        var public_key = 0;
+        db.query(sql, function(err, results){
+            public_key = results[0].public_key;
+            name = results[0].last_name + ', ' + results[0].first_name;
+            console.log(name + ': ' + public_key);
+        });
 
-       message = "Contract sent.";
-       res.render('send.ejs',{message: message});
+        var message = "";
+        if (filesize<512) {
+            // do something with the file contents
+            message = "Successfully sent.";
+        }
+        else {
+            message = "File too large";
+            console.log("File too large.");
+        }
+        res.render('send.ejs',{message: message});
    }
    else {
         if(userId == null){
