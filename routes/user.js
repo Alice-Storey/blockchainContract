@@ -7,9 +7,11 @@ exports.signup = function(req, res){
       var pass = post.password;
       var fname = post.first_name;
       var lname = post.last_name;
-      var mob = post.mob_no;
-      var public_key = post.public_key;
-      var sql = "INSERT INTO `blockchaincontract`.`users`(`first_name`,`last_name`,`mob_no`,`user_name`, `password`, `public_key`) VALUES ('" + fname + "','" + lname + "','" + mob + "','" + name + "','" + pass + "','" + public_key + "')";
+
+      //var public_key = post.public_key;
+      var email = post.email;
+      var sql = "INSERT INTO `blockchaincontract`.`users` (`first_name`,`last_name`,`email`,`user_name`, `password`) VALUES ('" + fname + "','" + lname + "','" + email + "','" + name + "','" + pass + "')";
+     
       var query = db.query(sql, function(err, result) {
          message = "Succesfully! Your account has been created.";
          console.log('Query : ', sql);
@@ -28,6 +30,7 @@ exports.login = function(req, res){
    if(req.method == "POST"){
       var post  = req.body;
       var name= post.user_name;
+      console.log(name);
       var pass= post.password;
       var sql="SELECT id, first_name, last_name, user_name FROM `blockchaincontract`.`users` WHERE `user_name`='"+name+"' and password = '"+pass+"'";
 
@@ -108,18 +111,55 @@ exports.send = function(req, res, next){
     userId = req.session.userId;
     console.log('userId='+userId);
 
-    if(userId == null){
-       res.redirect("/login");
-       return;
-    }
 
-    res.render('send.ejs', {user:user});
+
+    if(req.method == "POST"){
+        //var multer = require('multer'); // v1.0.5
+        //var upload = multer(); // for parsing multipart/form-data
+        var post = req.body;
+        var recipient = post.recipients;
+        var file = req.files[0].buffer;
+        var filesize = req.files[0].size;
+
+        console.log("file size: " + filesize);
+        console.log(String(file));
+        console.log("sending to uid "+recipient);
+        //console.log(req);
+        var sql="SELECT * FROM `blockchaincontract`.`users` WHERE `id`='"+recipient+"' order by last_name asc limit 1";
+
+        var public_key = 0;
+        db.query(sql, function(err, results){
+            public_key = results[0].public_key;
+            name = results[0].last_name + ', ' + results[0].first_name;
+            console.log(name + ': ' + public_key);
+        });
+
+        var message = "";
+        if (filesize<512) {
+            // do something with the file contents
+            message = "Successfully sent.";
+        }
+        else {
+            message = "File too large";
+            console.log("File too large.");
+        }
+        res.render('send.ejs',{message: message});
+   }
+   else {
+        if(userId == null){
+           res.redirect("/login");
+           return;
+        }
+
+        res.render('send.ejs', {user:user});
+    }
 };
 
 exports.load_recipients = function(req, res, next){
     var user =  req.session.user,
     userId = req.session.userId;
     console.log('userId='+userId);
+
 
     var sql="SELECT * FROM `blockchaincontract`.`users` WHERE `id`<>'"+userId+"' order by last_name asc";
 

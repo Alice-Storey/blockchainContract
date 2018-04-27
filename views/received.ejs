@@ -5,17 +5,43 @@
         <h1>Received</h1>
         <p>Received</p>
 
-        <button onclick="refresh()" type="button" id="refresh">Refresh</button>
+        <table style="width:70%" id=contracts>
+            <tr>
+                <th>Title</th>
+                <th>Signed</th>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="contract1" />Test Agreement #1</td>
+                <td>4/1/18</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="contract2" />Test Agreement #2</td>
+                <td>no</td>
+            </tr>
+        </table>
+
+        <br><button onclick="refresh()" type="button" id="refresh">Refresh</button>
+
         <button onclick="sign_contract()" type="button" id="sign_contract">Sign</button>
 
     </div>
 
     <script>
         $( function() {
-            refresh();
+
+            //enable to refresh at page load:
+            //refresh();
         });
 
         function refresh() {
+            var contracts = $("#contracts")
+
+            //dev test purposes/example of usage:
+            var newContractName = "contract3";
+            var newContractTitle = "Test Agreement #3";
+            var newTr = '<tr><td><input type="checkbox" name="'+newContractName+'" />'+newContractTitle+'</td><td>no</td></tr>';
+            contracts.append(newTr);
+
 
             //implementation
 
@@ -25,9 +51,6 @@
 
             $.post("/api/1/load_contracts", null, data_refreshed);
         }
-        $( function() {
-            refresh();
-        });
 
         function sign_contract() {
 
