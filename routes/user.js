@@ -11,7 +11,7 @@ exports.signup = function(req, res){
       //var public_key = post.public_key;
       var email = post.email;
       var sql = "INSERT INTO `blockchaincontract`.`users` (`first_name`,`last_name`,`email`,`user_name`, `password`) VALUES ('" + fname + "','" + lname + "','" + email + "','" + name + "','" + pass + "')";
-     
+
       var query = db.query(sql, function(err, result) {
          message = "Succesfully! Your account has been created.";
          console.log('Query : ', sql);
@@ -84,7 +84,7 @@ exports.received = function(req, res, next){
       return;
    }
 
-   //var sql="SELECT * FROM `blockchaincontract`.`users` WHERE `id`='"+userId+"'";
+   var sql="SELECT * FROM `blockchaincontract`.`users` WHERE `id`='"+userId+"'";
 
     db.query(sql, function(err, results){
       res.render('received.ejs', {user:user});
