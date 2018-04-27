@@ -58,13 +58,9 @@ app.get('/home/send', user.send);//call for received page
 app.post('/home/send', upload.any(), user.send);
 app.get('/home/logout', user.logout);//call for logout
 app.get('/home/profile',user.profile);//to render users profile
-app.post('/api/1/load_recipients', user.load_recipients); //get list of recipients with keys
+app.post('/api/1/load_recipients', user.load_recipients);
 app.post('/api/1/load_contracts', user.load_contracts);
 app.post('/api/1/sign_contract', user.sign_contract);
-
-//alice
-//app.post('/api/1/generate_keys', user.generate_keys);
-//app.post('/api/1/upload_contract', user.upload_contract);
-
+app.post('/api/1/generate_keys', user.generate_keys);
 //Middleware
 app.listen(8080)

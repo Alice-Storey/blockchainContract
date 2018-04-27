@@ -4,6 +4,7 @@
     <div class="jumbotron">
         <h1>Received</h1>
         <p>Received</p>
+
         <table style="width:70%" id=contracts>
             <tr>
                 <th>Title</th>
@@ -20,12 +21,14 @@
         </table>
 
         <br><button onclick="refresh()" type="button" id="refresh">Refresh</button>
+
         <button onclick="sign_contract()" type="button" id="sign_contract">Sign</button>
 
     </div>
 
     <script>
         $( function() {
+
             //enable to refresh at page load:
             //refresh();
         });
@@ -38,6 +41,7 @@
             var newContractTitle = "Test Agreement #3";
             var newTr = '<tr><td><input type="checkbox" name="'+newContractName+'" />'+newContractTitle+'</td><td>no</td></tr>';
             contracts.append(newTr);
+
 
             //implementation
 

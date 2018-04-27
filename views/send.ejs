@@ -15,6 +15,7 @@
             <br><br><input type="submit" value="Send" id="send_contract">
 
         </form>
+
     </div>
 
 <script>
@@ -32,13 +33,14 @@
         var data_refreshed = function(data){
             console.log(data);
             data.forEach( function(user){
+
                 var dropentry = "<option value='"+user.id+"' id='uid"+user.id+"'>"+user.email+"</option>";
+
                 $("#recipients").append(dropentry);
             });
         };
         $.post("/api/1/load_recipients", null, data_refreshed);
     }
-
 
 
 </script>
