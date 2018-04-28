@@ -183,6 +183,35 @@ exports.profile = function(req, res){
       return;
    }
 
+   if (req.method == "POST"){
+       console.log('myusername : ' + req.body.user_name );
+       var post = req.body;
+       var user_name = post.user_name;
+       var password = post.password;
+       var first_name = post.first_name;
+       var last_name = post.last_name;
+       var email = post.email;
+       var sql2 = "UPDATE users SET"+
+                " user_name = '"+user_name+"'"+
+                ", password = '"+password+"'"+
+                ", first_name = '"+first_name+"'"+
+                ", last_name = '"+last_name+"'"+
+                ", email = '"+email+"'"+
+                " WHERE id = "+userId;
+        if (user_name && password && first_name && last_name && email) {
+            db.query(sql2, function(err, result) {
+                console.log(sql2);
+                message = "Your account has been updated.";
+            });
+        }
+        else{
+            message = "One or more fields blank.";
+            console.log ("Error updating profile");
+        }
+
+
+   }
+
    var sql="SELECT * FROM `blockchaincontract`.`users` WHERE `id`='"+userId+"'";
    db.query(sql, function(err, result){
       res.render('profile.ejs',{data:result});

@@ -3,32 +3,78 @@
     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
       <div class="panel panel-info">
         <div class="panel-heading">
-          <h3 class="panel-title"><%=data[0].first_name%>, <%=data[0].last_name%></h3>
+          <h3 class="panel-title"><%=data[0].first_name%> <%=data[0].last_name%></h3>
         </div>
         <div class="panel-body">
           <div class="row">
-            <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="" class="img-circle img-responsive"> </div>
-            <div class=" col-md-9 col-lg-9 ">
-              <table class="table table-user-information">
-                <tbody>
-                  <tr>
-                    <td>User Name:</td>
-                    <td><%=data[0].user_name%></td>
-                  </tr>
-                  <tr>
-                    <td>Mobile:</td>
-                    <td><%=data[0].mob_no%></td>
-                  </tr>
-                </tbody>
-              </table>
-             <!--
-              <button onclick="openWin()">Generate Key Pair</button>
-                -->
-                <button onclick="generate_keys()" type="button" id="generate_keys">Generate Keys</button>
+
+
+
+
+                <form class="form-horizontal" role="form" method="post" action="/home/profile">
+
+                    <div id="signupalert" style="display:none" class="alert alert-danger">
+                        <p>Error:</p>
+                        <span></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="first_name" class="col-md-3 control-label">First Name</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" name="first_name" value=<%=data[0].first_name%> ></input>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name" class="col-md-3 control-label">Last Name</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" name="last_name" value=<%=data[0].last_name%>></input>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="col-md-3 control-label">Email</label>
+
+                        <div class="col-md-9">
+                            <input id="email" type="text" class="form-control" name="email" value=<%=data[0].email%> ></input>
+                        </div>
+                    </div>
+
+                        <div class="form-group">
+                        <label for="user_name" class="col-md-3 control-label">User Name</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" name="user_name" value=<%=data[0].user_name%> ></input>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-md-3 control-label">Password</label>
+                        <div class="col-md-9">
+                            <input type="password" class="form-control" name="password" value=<%=data[0].password%> ></input>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <!-- Button -->
+                        <div class="col-md-offset-3 col-md-9">
+                            <input type="submit" value="Confirm Changes" id="update_acct_button">
+                        </div>
+                    </div>
+                </form>
+
+
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">Public Key</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+            <table style="width:90%" id=contracts>
+
+                <tr>
+                        <td><h4> <%=String(data[0].public_key)%> </h4></td>
+                </tr>
+            </table>
+            <div class="col-md-offset-3 col-md-9">
+                <button onclick="generate_keys()" type="button" id="generate_keys" class="btn btn-info"><i class="icon-hand-right"></i>Generate Keys</button>
             </div>
-          </div>
-        </div>
-    </div>
 <script>
 function openWin() {
     myWindow = window.open("", "myWindow", "width=400,height=400");   // Opens a new window
