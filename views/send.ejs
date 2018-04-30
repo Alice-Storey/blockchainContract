@@ -1,25 +1,48 @@
 <html lang="en">
     <%- include header %>
     <!-- Main component for a primary marketing message or call to action -->
-    <div class="jumbotron">
+<div class="jumbotron">
         <h1>Send</h1>
+    <div class="container">
+
 
 
         <form id="sendform" class="form-horizontal" role="form" method="POST" action="/home/send" enctype="multipart/form-data">
-
-            <button onclick="refresh()" type="button" id="refresh">Refresh</button>
-            <select id="recipients" name="recipients"></select>
+            <div class="row">
+                <div class="col-sm-2">
+                    <button onclick="refresh()" type="button" id="refresh" class="btn btn-primary">Refresh</button>
+                </div>
+                <div class="col-sm-10">
+                    <select id="recipients" name="recipients" class="form-control selectpicker"></select>
+                </div>
+            </div>
             <br><br>
-            Upload contract: <input type="file" id="contract_file" name="contract_file"></input>
-            (must be plaintext and less than 512KB)
-            <br><br><input type="submit" value="Send" id="send_contract">
+            <div class="row" style="margin-bottom:0px;">
+                <span class="col-md-3" />
+                    <h4>Upload contract:</h4>
+            </div>
+            <div class="row" style="margin-top:0px;">
+                <div class="col-sm-8">
+                    <label class="btn-bs-file btn btn-lg btn-primary">
+                        <input type="file" id="contract_file" name="contract_file">
+                    </label>
+                    <h5><i>(must be plaintext and less than 512KB)</i></h5>
+                </div>
+            </div>
+            <br><br><input type="submit" value="Send" id="send_contract" class="btn btn-success">
 
         </form>
 
+
+
     </div>
+</div>
 
 <script>
+
+
     $( function() {
+        $("#nav_send").tab('show');
         refresh();
     });
 

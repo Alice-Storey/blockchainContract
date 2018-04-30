@@ -42,7 +42,8 @@ app.use(session({
               secret: 'keyboard cat',
               resave: false,
               saveUninitialized: true,
-              cookie: { maxAge: 60000 }
+              cookie: { maxAge: 600000 },
+              rolling: true
             }))
 
 // development only
@@ -58,7 +59,7 @@ app.get('/home/send', user.send);//call for received page
 app.post('/home/send', upload.any(), user.send);
 app.get('/home/logout', user.logout);//call for logout
 app.get('/home/profile',user.profile);//to render users profile
-app.post('/home/profile',user.profile);
+app.post('/home/profile', upload.any(),user.profile);
 app.post('/api/1/load_recipients', user.load_recipients);
 app.post('/api/1/load_contracts', user.load_contracts);
 app.post('/api/1/sign_contract', user.sign_contract);
