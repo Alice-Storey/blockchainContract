@@ -1,3 +1,32 @@
     </div>
   </body>
+<script>
+    function submit_account_changes() {
+        if (field_is_empty()) {
+            create_alert("Something is blank! No changes made.");
+        }
+        else {
+            $("#account_form").submit();
+        }
+    }
+
+    function create_alert(msg) {
+        $('#page_alert').html('<div id="page_alert_message" class="alert alert-warning alert-dismissible" role="alert">'+msg+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+    }
+
+    function field_is_empty() {
+        var is_empty = false;
+        $('input[type="text"]').each( function(i,field) {
+            if (!field.value) {
+                is_empty = true;
+            }
+        });
+        $('input[type="password"]').each( function(i,field) {
+            if (!field.value) {
+                is_empty = true;
+            }
+        });
+        return is_empty;
+    }
+</script>
 </html>

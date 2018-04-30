@@ -1,0 +1,17 @@
+{
+  "name": "BlockchainContract_Client",
+  "version": "1.0.0",
+  "description": "A desktop client to access the web app BlockChain Contract",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Alice",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^1.8.4"
+  },
+  "dependencies": {
+    "jquery": "^3.3.1"
+  }
+}
