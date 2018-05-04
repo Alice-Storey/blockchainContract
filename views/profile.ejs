@@ -57,7 +57,7 @@
                 <div class="row">
                     <div class="form-group">
                         <div class="col-md-offset-3 col-md-9">
-                            <button class="btn btn-info" id="update_acct_button" onClick="submit_account_changes()">Confirm Changes</button><br>
+                            <button class="btn btn-success" id="update_acct_button" onClick="submit_account_changes()">Confirm Changes</button><br>
                         </div>
                     </div>
                 </div>
@@ -99,7 +99,9 @@
                         </div>
                     </div>
                 </div>
-                <h5><i>Warning: resetting your keys means you cannot receive any more contracts sent to this public key.</i></h5>
+                <span class="help-block">
+                    <center><i>Warning: resetting your keys means you cannot receive any more contracts sent to this public key.</i></center>
+                </span>
 
             </div>
         </div>
@@ -132,6 +134,10 @@
         else {
             $("#generate_keys").prop("disabled",true);
         }
+    }
+
+    function check_changes() {
+
     }
 
 </script>
