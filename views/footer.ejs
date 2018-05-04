@@ -3,9 +3,11 @@
 <script>
     function submit_account_changes() {
         if (field_is_empty()) {
+            console.log("is blank, no submit");
             create_alert("Something is blank! No changes made.");
         }
         else {
+            console.log("submitting");
             $("#account_form").submit();
         }
     }

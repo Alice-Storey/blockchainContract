@@ -1,96 +1,113 @@
 <%- include header %>
 <div class="container">
-<div class="row">
     <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xs-offset-0 col-sm-offset-0 col-md-offset-1 col-lg-offset-1 toppad">
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h3 class="panel-title"><%=data[0].first_name%> <%=data[0].last_name%></h3>
             </div>
             <div class="panel-body">
-                <div class="row">
+                <form id="account_form" class="form-horizontal" role="form" method="post" action="/home/profile" enctype="multipart/form-data">
 
-                    <form id="account_form" class="form-horizontal" role="form" method="post" action="/home/profile" enctype="multipart/form-data">
-
+                    <div class="row">
                         <div class="form-group">
                             <label for="first_name" class="col-md-3 control-label">First Name</label>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" name="first_name" value=<%=data[0].first_name%> ></input>
                             </div>
                         </div>
+                    </div>
 
-
+                    <div class="row">
                         <div class="form-group">
                             <label for="last_name" class="col-md-3 control-label">Last Name</label>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" name="last_name" value=<%=data[0].last_name%>></input>
                             </div>
                         </div>
+                    </div>
 
-
-
+                    <div class="row">
                         <div class="form-group">
                             <label for="email" class="col-md-3 control-label">Email</label>
-
                             <div class="col-md-9">
                                 <input id="email" type="text" class="form-control" name="email" value=<%=data[0].email%> ></input>
                             </div>
                         </div>
+                    </div>
 
-
-
+                    <div class="row">
                         <div class="form-group">
                             <label for="user_name" class="col-md-3 control-label">User Name</label>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" name="user_name" value=<%=data[0].user_name%> ></input>
                             </div>
                         </div>
+                    </div>
 
-
-
+                    <div class="row">
                         <div class="form-group">
                             <label for="password" class="col-md-3 control-label">Password</label>
                             <div class="col-md-9">
                                 <input type="password" class="form-control" name="password" value=<%=data[0].password%> ></input>
                             </div>
                         </div>
-                    </form>
+                    </div>
 
+                </form>
+                <div class="row">
                     <div class="form-group">
                         <div class="col-md-offset-3 col-md-9">
-                            <button class="btn btn-info" id="update_acct_button" onClick="submit_account_changes()">Confirm Changes</button><br>
+                            <button class="btn btn-success" id="update_acct_button" onClick="submit_account_changes()">Confirm Changes</button><br>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <!-- end of panel -->
 
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Public Key</h3>
-
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Public Key</h3>
+            </div>
+            <div class="panel-body">
+                <center>
+                    <div class="row">
+                        <div class="col-12">
+                            <h4> <%=String(data[0].user_name)%> </h4>
                         </div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <table style="width:90%" id=contracts>
+                    </div>
 
-                                    <tr>
-                                        <td>
-                                        <div class="col-md-offset-1 col-md-9">
-                                            <h4> <%=String(data[0].public_key)%> </h4></td>
-                                        </div>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-offset-3 col-sm-2">
-                                    <button onclick="generate_keys()" type="button" id="generate_keys" class="btn btn-info" disabled><i class="icon-hand-right"></i>Generate Keys</button>
+                    <div class="row">
+                        <div class="col-12" >
+                            <h4> <%=String(data[0].public_key)%> </h4>
+                        </div>
+                    </div>
+                </center>
+                <div class="row">
+                    <div class="panel panel-info col-md-6 col-md-offset-3">
+                        <div class="container-fluid">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <button onclick="generate_keys()" type="button" id="generate_keys" class="btn btn-danger" disabled><i class="icon-hand-right"></i>Generate Keys</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="checkbox" class="form-check-input" id="generate_confirm" onchange="handle_checkbox()">Reset Key</input>
+                                    </div>
                                 </div>
-                                <span class="col-xs-1"></span>
-                                <div class="col-sm-3">
-                                    <input type="checkbox" class="form-check-input" id="generate_confirm" onchange="handle_checkbox()">Reset Key</input>
-                                </div>
                             </div>
-                            <div class="row">
-                                <h5><i>Warning: resetting your keys means you cannot receive any more contracts sent to this public key.</i></h5>
+                        </div>
+                    </div>
+                </div>
+                <span class="help-block">
+                    <center><i>Warning: resetting your keys means you cannot receive any more contracts sent to this public key.</i></center>
+                </span>
+
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <script>
     $( function() {
@@ -132,6 +149,10 @@
         else {
             $("#generate_keys").prop("disabled",true);
         }
+    }
+
+    function check_changes() {
+
     }
 
 </script>

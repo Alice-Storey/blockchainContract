@@ -2,11 +2,8 @@
     <%- include header %>
     <!-- Main component for a primary marketing message or call to action -->
 <div class="jumbotron">
-        <h1>Send</h1>
     <div class="container">
-
-
-
+    <h1>Send</h1>
         <form id="sendform" class="form-horizontal" role="form" method="POST" action="/home/send" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-sm-2">
@@ -15,26 +12,38 @@
                 <div class="col-sm-10">
                     <select id="recipients" name="recipients" class="form-control selectpicker"></select>
                 </div>
-            </div>
-            <br><br>
+            </div><br><br>
             <div class="row" style="margin-bottom:0px;">
                 <span class="col-md-3" />
                     <h4>Upload contract:</h4>
             </div>
             <div class="row" style="margin-top:0px;">
                 <div class="col-sm-8">
-                    <label class="btn-bs-file btn btn-lg btn-primary">
+                    <!--<label class="btn-bs-file btn btn-lg btn-primary">
                         <input type="file" id="contract_file" name="contract_file">
-                    </label>
-                    <h5><i>(must be plaintext and less than 512KB)</i></h5>
+                    </label>-->
+                    <!-- file input -->
+
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-primary">
+                                Browse&hellip; <input type="file" style="display: none;" multiple>
+                            </span>
+                        </label>
+                        <input type="text" class="form-control" readonly>
+                    </div>
+
+
+                    <!-- end of file input -->
+
+                    <span class="help-block">
+                        <i>(must be plaintext and less than 512KB)</i></h5>
+                    </span>
                 </div>
             </div>
             <br><br><input type="submit" value="Send" id="send_contract" class="btn btn-success">
 
         </form>
-
-
-
     </div>
 </div>
 

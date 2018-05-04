@@ -36,10 +36,11 @@ exports.login = function(req, res){
 
       db.query(sql, function(err, results){
          if(results.length){
+            message = "";
             req.session.userId = results[0].id;
             req.session.user = results[0];
             console.log(results[0].id);
-            res.redirect('/home/dashboard');
+            res.render('dashboard.ejs', {message: message});
          }
          else{
             console.log('Query : ', sql);
