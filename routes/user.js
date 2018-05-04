@@ -233,10 +233,26 @@ exports.editprofile=function(req,res){
    });
 };
 
-exports.generate_keys=function(req,res){
-   var userId = req.session.userId;
-   if(userId == null){
-      res.redirect("/login");
-      return;
-   }
+exports.generate_keys = function(req, res) {
+  var userId = req.session.userId;
+  if (userId == null) {
+    res.redirect("/login");
+    return;
+  }
+
+  var crypto = require('crypto');
+  var keypair = crypto.createDiffieHellman(1024);
+  keypair.generateKeys('base64');
+  var public_key = keypair.getPublicKey('base64');
+  var private_key = keypair.getPrivateKey('base64');
+  // console.log("Public Key : ", public_key);
+  // console.log("Private Key : ", private_key);
+
+  var sql = "UPDATE users SET public_key = '" + public_key + "' WHERE id=" + userId;
+
+  db.query(sql, function(err, results) {
+    res.send(private_key);
+    // console.log("Private Key : " + err + sql);
+  });
+
 }
