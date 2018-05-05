@@ -222,13 +222,11 @@ exports.profile = function(req, res){
        var last_name = post.last_name;
        var email = post.email;
        var sql2 = "UPDATE users SET"+
-                " user_name = '"+user_name+"'"+
                 ", password = '"+password+"'"+
                 ", first_name = '"+first_name+"'"+
                 ", last_name = '"+last_name+"'"+
-                ", email = '"+email+"'"+
                 " WHERE id = "+userId;
-        if (user_name && password && first_name && last_name && email) {
+        if ( password && first_name && last_name) {
             db.query(sql2, function(err, result) {
                 console.log(sql2);
                 message = "Your account has been updated.";
@@ -236,7 +234,7 @@ exports.profile = function(req, res){
         }
         else{
             message = "One or more fields blank.";
-            console.log ("Error updating profile");
+            console.log ("Error updating profile."+sql2);
         }
 
 

@@ -19,15 +19,19 @@
     function field_is_empty() {
         var is_empty = false;
         $('input[type="text"]').each( function(i,field) {
+            console.log("field:"+i+field.value);
             if (!field.value) {
+
                 is_empty = true;
             }
         });
         $('input[type="password"]').each( function(i,field) {
+            console.log("field:"+i+field.value);
             if (!field.value) {
                 is_empty = true;
             }
         });
+        console.log("isempty:"+is_empty);
         return is_empty;
     }
 </script>
