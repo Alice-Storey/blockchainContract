@@ -2,51 +2,60 @@
     <%- include header %>
     <!-- Main component for a primary marketing message or call to action -->
 <div class="container">
-<div class="jumbotron">
-    <div class="container">
-    <h1>Send</h1>
-        <form id="sendform" class="form-horizontal" role="form" method="POST" action="/home/send" enctype="multipart/form-data">
-            <div class="row">
-                <div class="col-sm-2">
-                    <button onclick="refresh()" type="button" id="refresh" class="btn btn-primary">Refresh</button>
+    <div class="jumbotron">
+        <br>
+        <div class="container">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Send</h2>
                 </div>
-                <div class="col-sm-10">
-                    <select id="recipients" name="recipients" class="form-control selectpicker"></select>
+                <div class="panel-body">
+                    <form id="sendform" class="form-horizontal" role="form" method="POST" action="/home/send" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <button onclick="refresh()" type="button" id="refresh" class="btn btn-info">Refresh</button>
+                            </div>
+                            <div class="col-sm-11">
+                                <select id="recipients" name="recipients" class="form-control selectpicker"></select>
+                            </div>
+                        </div><br><br>
+                        <div class="row" style="margin-bottom:0px;">
+                            <span class="col-md-3" />
+                                <h4>Upload contract:</h4>
+                        </div>
+                        <div class="row" style="margin-top:0px;">
+                            <div class="col-sm-12">
+                                <!--<label class="btn-bs-file btn btn-lg btn-primary">
+                                    <input type="file" id="contract_file" name="contract_file">
+                                </label>-->
+                                <!-- file input -->
+
+                                    <div class="input-group">
+                                        <label class="input-group-btn">
+                                            <span class="btn btn-primary">
+                                                Browse&hellip; <input type="file" style="display: none;" multiple>
+                                            </span>
+                                        </label>
+                                        <input type="text" class="form-control" readonly>
+                                    </div>
+
+
+                                <!-- end of file input -->
+
+                                <span class="help-block">
+                                    <i>(must be plaintext and less than 512KB)</i></h5>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                            <br><br><input type="submit" value="Send" id="send_contract" class="btn btn-success">
+                        </div>
+
+                    </form>
                 </div>
-            </div><br><br>
-            <div class="row" style="margin-bottom:0px;">
-                <span class="col-md-3" />
-                    <h4>Upload contract:</h4>
             </div>
-            <div class="row" style="margin-top:0px;">
-                <div class="col-sm-8">
-                    <!--<label class="btn-bs-file btn btn-lg btn-primary">
-                        <input type="file" id="contract_file" name="contract_file">
-                    </label>-->
-                    <!-- file input -->
-
-                    <div class="input-group">
-                        <label class="input-group-btn">
-                            <span class="btn btn-primary">
-                                Browse&hellip; <input type="file" style="display: none;" multiple>
-                            </span>
-                        </label>
-                        <input type="text" class="form-control" readonly>
-                    </div>
-
-
-                    <!-- end of file input -->
-
-                    <span class="help-block">
-                        <i>(must be plaintext and less than 512KB)</i></h5>
-                    </span>
-                </div>
-            </div>
-            <br><br><input type="submit" value="Send" id="send_contract" class="btn btn-success">
-
-        </form>
+        </div>
     </div>
-</div>
 </div>
 
 <script>
