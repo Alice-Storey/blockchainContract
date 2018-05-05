@@ -7,18 +7,47 @@ exports.signup = function(req, res){
       var pass = post.password;
       var fname = post.first_name;
       var lname = post.last_name;
-
-      //var public_key = post.public_key;
       var email = post.email;
-      var sql = "INSERT INTO `blockchaincontract`.`users` (`first_name`,`last_name`,`email`,`user_name`, `password`) VALUES ('" + fname + "','" + lname + "','" + email + "','" + name + "','" + pass + "')";
 
-      var query = db.query(sql, function(err, result) {
-         message = "Your account has been created.";
-         console.log('Query : ', sql);
-         res.render('signup.ejs',{message: message});
+
+      var find_username ="SELECT id, first_name, last_name, user_name FROM `blockchaincontract`.`users` WHERE `user_name`='"+name+"'";
+      var query_username = db.query(find_username, function(err, result) {
+          if (result.length==0) { //if no users with user_name
+
+              var find_email ="SELECT id, first_name, last_name, user_name FROM `blockchaincontract`.`users` WHERE `email`='"+email+"'";
+              var query_email = db.query(find_email, function(err, result2) {
+                  if (result2.length==0) { //if no users with email
+                    message = "Account created.";
+
+                    //var public_key = post.public_key;
+                     var sql = "INSERT INTO `blockchaincontract`.`users` (`first_name`,`last_name`,`email`,`user_name`, `password`) VALUES ('" + fname + "','" + lname + "','" + email + "','" + name + "','" + pass + "')";
+
+                     var query = db.query(sql, function(err, result3) {
+                        message = "Your account has been created.";
+                        console.log('Query : ', sql);
+                        res.render('signup.ejs',{message: message});
+                     });
+
+                  }
+                  else {
+                     message = "Account already exists with that email.";
+                     console.log('Query : ', find_email);
+                     res.render('signup.ejs',{message: message});
+                 }
+              });
+           }
+          else {
+              console.log("result"+result);
+             message = "Account already exists with that username.";
+             console.log('Query : ', find_username);
+             res.render('signup.ejs',{message: message});
+            }
+
+
       });
+
    } else {
-      res.render('signup');
+      res.render('signup',{message: ""});
    }
 };
 
