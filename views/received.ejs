@@ -38,9 +38,9 @@
         });
 
         function refresh() {
-            var contracts = $("#contracts")
+            console.log("refreshing");
 
-            //dev test purposes/example of usage:
+            /*//dev test purposes/example of usage:
             var newContractName = "contract3";
             var newContractTitle = "Test Agreement #3";
             var newTr = '<tr><td><input type="checkbox" name="'+newContractName+'" />'+newContractTitle+'</td><td>no</td></tr>';
@@ -53,7 +53,15 @@
                 console.log(data);
             }
 
-            $.post("/api/1/load_contracts", null, data_refreshed);
+            $.post("/api/1/load_contracts", null, data_refreshed);*/
+
+            var contracts_fetched = function(data) {
+                console.log("fetched");
+                console.log(data);
+            };
+            $.post("/api/1/load_contracts", null, contracts_fetched );
+
+
         }
 
         function sign_contract() {

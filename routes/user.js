@@ -126,6 +126,23 @@ exports.load_contracts = function(req, res, next) {
     var user =  req.session.user,
     userId = req.session.userId;
     console.log('userId='+userId);
+
+    var request = require("request");
+    var url = "http://localhost:9090/GetBlockChain";
+    console.log("loading contracts");
+    request({
+        url: url,
+        json: true
+    }, function (error, response, body) {
+        console.log("fetching");
+        if (!error && response.statusCode === 200) {
+            console.log("200");
+            console.log(body); // Print the json response
+            res.send(body);
+        }
+    })
+
+
 }
 
 exports.sign_contract = function(req, res, next) {
