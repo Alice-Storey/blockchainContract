@@ -11,7 +11,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <ul class="list-group pre-scrollable"> <!--HEIGHT: look in CSS in HEADER -- starts table and makes scrollable-->
+                        <ul class="list-group pre-scrollable accordion" id="contracts"> <!--HEIGHT: look in CSS in HEADER -- starts table and makes scrollable-->
                             <li class="list-group-item">First item</li>
                             <li class="list-group-item">Second item</li>
                             <li class="list-group-item">Third item</li>
@@ -42,35 +42,40 @@
     <script>
         $( function() {
             $("#nav_received").tab('show');
+
             //enable to refresh at page load:
-            //refresh();
+            refresh();
         });
 
         function refresh() {
             console.log("refreshing");
-
-            /*//dev test purposes/example of usage:
-            var newContractName = "contract3";
-            var newContractTitle = "Test Agreement #3";
-            var newTr = '<tr><td><input type="checkbox" name="'+newContractName+'" />'+newContractTitle+'</td><td>no</td></tr>';
-            contracts.append(newTr);
-
-
-            //implementation
-
-            var data_refreshed = function(data){
-                console.log(data);
-            }
-
-            $.post("/api/1/load_contracts", null, data_refreshed);*/
+            $("#contracts").empty();
 
             var contracts_fetched = function(data) {
                 console.log("fetched");
                 console.log(data);
+
+                data.forEach( function(block,index) {
+                    add_entry(block,index);
+                });
             };
             $.post("/api/1/load_contracts", null, contracts_fetched );
 
 
+
+        }
+
+        function add_entry(block,index) {
+            contracts = $("#contracts");
+
+            title = "Contract "+index; //this is an internal index for the page, not the index on the chain; each entry needs a unique identifier for the collapse functionality
+            contents = block.data;
+
+            //new_entry = '<li class="list-group-item card"><a data-toggle="collapse" data-parent="#contracts" href="#test"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>'+title+'</a><ul id="test" class="collapse"><li>Test</li></ul> </li>';
+            new_entry = '<li class="list-group-item card"><div class="card-header" id="header_'+index+'"><button class="btn btn-xs" data-toggle="collapse" data-parent="#contracts" data-target="#body_'+index+'" aria-controls="collapse"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>&nbsp;</button>'+title+'</div><ul id="body_'+index+'" class="collapse" aria-labelledby="header_'+index+'" data-parent="#contracts"><li>'+contents+'</li></ul> </li>';
+
+
+            contracts.append(new_entry);
         }
 
         function sign_contract() {
