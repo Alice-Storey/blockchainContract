@@ -1,10 +1,10 @@
 <html lang="en">
     <%- include header %>
     <!-- Main component for a primary marketing message or call to action -->
-<div class="container">
-    <div class="jumbotron">
+<div class="container-fluid">
+    <div class="jumbotron jumbotron-fluid">
         <br>
-        <div class="container">
+        <div class="container-fluid">
             <div class="panel panel-info">
                 <div class="panel-heading">
                     <h2 class="panel-title">Send</h2>
@@ -12,10 +12,8 @@
                 <div class="panel-body">
                     <form id="sendform" class="form-horizontal" role="form" method="POST" action="/home/send" enctype="multipart/form-data">
                         <div class="row">
-                            <div class="col-sm-1">
+                            <div class="col-sm-12">
                                 <button onclick="refresh()" type="button" id="refresh" class="btn btn-info">Refresh</button>
-                            </div>
-                            <div class="col-sm-11">
                                 <select id="recipients" name="recipients" class="form-control selectpicker"></select>
                             </div>
                         </div><br><br>

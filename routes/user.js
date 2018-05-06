@@ -138,7 +138,12 @@ exports.load_contracts = function(req, res, next) {
         if (!error && response.statusCode === 200) {
             console.log("200");
             console.log(body); // Print the json response
-            res.send(body);
+            console.log(user.user_name);
+
+
+            res.send(body.filter(  function(block){
+                return block.username == user.user_name;
+          }));
         }
     })
 
