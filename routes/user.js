@@ -185,12 +185,21 @@ exports.sign_contract = function(req, res, next) {
     console.log('userId='+userId);
 
     var sign_index = req.body.index; //index on chain to be signed
-    
-    console.log("signing block " + sign_index);
+    var private_key = req.body.private_key;
+    //var private_key = String(req.body.private_key); //alternate
 
+    console.log("signing block " + sign_index + " with private key " + String(private_key));
+    var success = true;
+    var statusCode = "150";
 
+    //do thing here to sign
 
-    statusCode = "150";
+    if (success) {
+    }
+    else {
+        statuscode = 350;
+    }
+
     res.send(statusCode);
 }
 
