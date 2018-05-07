@@ -128,27 +128,56 @@ exports.load_contracts = function(req, res, next) {
     console.log('userId='+userId);
 
     var request = require("request");
-    var url = "http://localhost:9090/GetBlockChain";
+    var url = "http://localhost:9090/GetBlockChain"; //api for blockchain
     console.log("loading contracts");
     request({
         url: url,
         json: true
     }, function (error, response, body) {
         console.log("fetching");
-        if (!error && response.statusCode === 200) {
+        if (!error && response.statusCode === 200) { //statuscode 200 is good!
             console.log("200");
-            console.log(body); // Print the json response
+            console.log(body); // Print the json response - will be entire chain
             console.log(user.user_name);
 
 
-            res.send(body.filter(  function(block){
-                return block.username == user.user_name;
+            res.send(body.filter(  function(block){ //send filtered list
+                return block.username == user.user_name; //test used for filter
           }));
         }
     })
 
 
 }
+
+exports.num_contracts = function(req, res, next) {
+    var user =  req.session.user,
+    userId = req.session.userId;
+    console.log('userId='+userId);
+
+    var request = require("request");
+    var url = "http://localhost:9090/GetBlockChain"; //api for blockchain
+    console.log("loading contracts");
+    request({
+        url: url,
+        json: true
+    }, function (error, response, body) {
+        console.log("fetching");
+        if (!error && response.statusCode === 200) { //statuscode 200 is good!
+            /*console.log("200");
+            console.log(body); // Print the json response - will be entire chain
+            console.log(user.user_name);
+            */
+            users_blocks = body.filter(  function(block){ //send filtered list
+                return block.username == user.user_name; //test used for filter
+            });
+            console.log("length: "+users_blocks.length);
+            res.send( [users_blocks.length] );
+        }
+    })
+}
+
+
 
 exports.sign_contract = function(req, res, next) {
     var user =  req.session.user,

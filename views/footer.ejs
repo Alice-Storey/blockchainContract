@@ -34,5 +34,12 @@
         console.log("isempty:"+is_empty);
         return is_empty;
     }
+
+    function count_contracts() {
+        var contracts_counted = function(data) {
+            $("#num_contracts").html(data);
+        };
+        $.post("/api/1/num_contracts", null, contracts_counted );
+    }
 </script>
 </html>
