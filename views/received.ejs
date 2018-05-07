@@ -1,6 +1,7 @@
 <html lang="en">
    <%- include header %>
    <!-- Main component for a primary marketing message or call to action -->
+<div class="hidden" id="contracts_json"></div>
 <div class="container-fluid">
     <div class="jumbotron jumbotron-fluid">
         <div class="container-fluid">
@@ -68,6 +69,9 @@
                 console.log("fetched");
                 console.log(data);
                 $("#num_contracts").html(data.length);
+                $("#contracts_json").html(JSON.stringify(data));
+
+                //var parsed_data = JSON.parse($("#contracts_json").innerHTML);
 
                 data.forEach( function(block,index) {
                     add_entry(block,index);
@@ -102,19 +106,15 @@
 
         function sign_contract() {
 
-            id = $('.card.active')[0].attr('id');
-            index = id.substring(id.indexOf("_")+1);
+            /*index = id.substring(id.indexOf("_")+1);
             console.log("signing "+index);
 
             var contract_signed = function(data){
                 console.log(data);
             }
 
-            $.post("/api/1/sign_contract", null, contract_signed);
+            $.post("/api/1/sign_contract", null, contract_signed);*/
         }
-        $( function() {
-            sign_contract();
-        });
 
 
     </script>
