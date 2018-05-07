@@ -24,10 +24,10 @@
                     </div>
                     <div class="row">
                         <div class="form-group">
-                            <div class="col-sm-offset-6">
+                            <div class="col-sm-offset-6" id="doc_buttons">
                                 <!--<br><button  class="btn btn-info" onclick="refresh()" id="refresh">Refresh</button>-->
-
                                 <button class="btn btn-success" onclick="sign_contract()"  id="sign_contract">Sign</button>
+
                             </div>
                         </div>
                     </div>
@@ -84,9 +84,16 @@
             title = "Contract "+index; //this is an internal index for the page, not the index on the chain; each entry needs a unique identifier for the collapse functionality
             contents = block.data;
 
+            var timestamp = block.timestamp;
+            var date = new Date(timestamp*1000);
+            var dateString = date.toDateString();
+            dateString = dateString.substring(dateString.indexOf(" ")+1) + " - " + date.toTimeString().substring(0,date.toTimeString().indexOf(" "));
+            console.log("timestamp: "+dateString);
+
+
             //new_entry = '<li class="list-group-item card"><a data-toggle="collapse" data-parent="#contracts" href="#test"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>'+title+'</a><ul id="test" class="collapse"><li>Test</li></ul> </li>';
             //new_entry = '<li class="list-group-item card"><div class="card-header" id="header_'+index+'"><button class="btn btn-xs" data-toggle="collapse" data-parent="#contracts" data-target="#body_'+index+'" aria-controls="collapse"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>&nbsp;</button>'+title+'</div><ul id="body_'+index+'" class="collapse" aria-labelledby="header_'+index+'" data-parent="#contracts"><li>'+contents+'</li></ul> </li>';
-            var new_entry = '<li class="list-group-item card btn" id="card_'+index+'">Contract '+index+'<div class="hidden">'+contents+'</div></li>';
+            var new_entry = '<li class="list-group-item card btn" id="card_'+index+'">'+dateString+'<div class="hidden">'+contents+'</div></li>';
             var doc_entry = '<div class="hidden" id="doc_'+index+'">'+contents+'</div>';
             console.log("contents: "+contents);
             contracts.append(new_entry);
@@ -95,7 +102,9 @@
 
         function sign_contract() {
 
-            //implementation
+            id = $('.card.active')[0].attr('id');
+            index = id.substring(id.indexOf("_")+1);
+            console.log("signing "+index);
 
             var contract_signed = function(data){
                 console.log(data);
