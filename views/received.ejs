@@ -1,7 +1,6 @@
 <html lang="en">
    <%- include header %>
    <!-- Main component for a primary marketing message or call to action -->
-<div class="hidden" id="contracts_json"></div>
 <div class="container-fluid">
     <div class="jumbotron jumbotron-fluid">
         <div class="container-fluid">
@@ -39,7 +38,7 @@
 </div>
 
     <script>
-
+        var blocks_stringified = "";
         $( function() {
             $("#nav_received").tab('show');
             count_contracts();
@@ -52,9 +51,11 @@
 
                 id = $(this).attr('id');
                 index = id.substring(id.indexOf("_")+1);
-                console.log("index "+index);
-                $("#doc_view").children().addClass('hidden');
-                $("#doc_"+index).removeClass('hidden');
+                console.log("clicked index "+index);
+
+                var blocks = JSON.parse(blocks_stringified);
+                $("#doc_view").html(blocks[index].data);
+
             });
 
         });
@@ -69,9 +70,11 @@
                 console.log("fetched");
                 console.log(data);
                 $("#num_contracts").html(data.length);
-                $("#contracts_json").html(JSON.stringify(data));
 
-                //var parsed_data = JSON.parse($("#contracts_json").innerHTML);
+                blocks_stringified =JSON.stringify(data);
+                //puts into global variable containing the blocks json as a string
+                //the following line gets the string back as an object to do things with
+                //var reparsed = JSON.parse(stringified);
 
                 data.forEach( function(block,index) {
                     add_entry(block,index);
@@ -98,23 +101,30 @@
             //new_entry = '<li class="list-group-item card"><a data-toggle="collapse" data-parent="#contracts" href="#test"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>'+title+'</a><ul id="test" class="collapse"><li>Test</li></ul> </li>';
             //new_entry = '<li class="list-group-item card"><div class="card-header" id="header_'+index+'"><button class="btn btn-xs" data-toggle="collapse" data-parent="#contracts" data-target="#body_'+index+'" aria-controls="collapse"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>&nbsp;</button>'+title+'</div><ul id="body_'+index+'" class="collapse" aria-labelledby="header_'+index+'" data-parent="#contracts"><li>'+contents+'</li></ul> </li>';
             var new_entry = '<li class="list-group-item card btn" id="card_'+index+'">'+dateString+'<div class="hidden">'+contents+'</div></li>';
-            var doc_entry = '<div class="hidden" id="doc_'+index+'">'+contents+'</div>';
+            //var doc_entry = '<div class="hidden" id="doc_'+index+'">'+contents+'</div>';
             console.log("contents: "+contents);
             contracts.append(new_entry);
-            doc_view.append(doc_entry);
+            //doc_view.append(doc_entry);
         }
 
+        //signs contract at index (local index of user's blocks, not on chain)
         function sign_contract() {
 
-            /*index = id.substring(id.indexOf("_")+1);
-            console.log("signing "+index);
+            selected = $(".card.active")[0];
+            id = $(selected).attr('id');
+            index = id.substring(id.indexOf("_")+1);
 
+            var blocks = JSON.parse(blocks_stringified);
+            var BlockchainIndex = blocks[index].index; //this is the index on the global chain, to be passed by post request
+            console.log("ready to sign "+index);
             var contract_signed = function(data){
-                console.log(data);
+                console.log("signing user's block " + index + " which is at " + BlockchainIndex + " globally");
+                console.log("status code "+data);
             }
 
-            $.post("/api/1/sign_contract", null, contract_signed);*/
+            $.post("/api/1/sign_contract", {index:BlockchainIndex}, contract_signed);
         }
+
 
 
     </script>

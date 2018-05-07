@@ -183,6 +183,15 @@ exports.sign_contract = function(req, res, next) {
     var user =  req.session.user,
     userId = req.session.userId;
     console.log('userId='+userId);
+
+    var sign_index = req.body.index; //index on chain to be signed
+    
+    console.log("signing block " + sign_index);
+
+
+
+    statusCode = "150";
+    res.send(statusCode);
 }
 
 //-----------------------------------------------send page functionality----------------------------------------------
