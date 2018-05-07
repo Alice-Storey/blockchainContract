@@ -80,10 +80,11 @@
                             <h4> <%=String(data[0].user_name)%> </h4>
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="col-12" >
-                            <h4> <%=String(data[0].public_key)%> </h4>
+                    <div class="panel panel-info form-group col-sm-10 col-sm-offset-1">
+                        <div class="row">
+                            <div class="col-xs-12 pre-scrollable" style="min-height:45px;max-height:45px;">
+                                <h4> <%=String(data[0].public_key)%> </h4>
+                            </div>
                         </div>
                     </div>
                 </center>
@@ -131,6 +132,8 @@
             download('private_key.txt', data);
         }
         $.post("/api/1/generate_keys", null, keys_generated);
+
+        location.reload();
     }
 
     function download(filename, text) {
