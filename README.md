@@ -52,6 +52,14 @@ CREATE TABLE IF NOT EXISTS `blockchaincontract`.`users` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=4 ;
 
 ```
+### Install and Run Instructions for UBUNTU 
+```
+  Steps to install NODE.JS  
+  Step 1: curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+  Step 2: sudo apt-get install -y nodejs
+  Step 3: Go into the directory of the project. Run 'npm install' and it will install all the dependencies of the program
+  Step 4: Run 'node server.js' 
+```
 
 ### HTTP API
 
