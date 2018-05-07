@@ -54,6 +54,7 @@
             var contracts_fetched = function(data) {
                 console.log("fetched");
                 console.log(data);
+                $("#num_contracts").html(data.length);
 
                 data.forEach( function(block,index) {
                     add_entry(block,index);
