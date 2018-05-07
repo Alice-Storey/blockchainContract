@@ -11,23 +11,21 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <ul class="list-group pre-scrollable accordion" id="contracts"> <!--HEIGHT: look in CSS in HEADER -- starts table and makes scrollable-->
-                            <li class="list-group-item">First item</li>
-                            <li class="list-group-item">Second item</li>
-                            <li class="list-group-item">Third item</li>
-                            <li class="list-group-item">Fourth item</li>
-                            <li class="list-group-item">Fifth item</li>
-                            <li class="list-group-item">Sixth item</li>
-                            <li class="list-group-item">Seventh item</li>
-                            <li class="list-group-item">Eighth item</li>
-                            <li class="list-group-item">Ninth item</li>
-                            <li class="list-group-item">Tenth item</li>
-                        </ul>
+                        <div class="col-sm-6">
+                            <ul class="list-group pre-scrollable" id="contracts"> <!--HEIGHT: look in CSS in HEADER , starts table and makes scrollable-->
+
+                            </ul>
+                        </div>
+                        <div class="col-sm-6">
+                            <div id="doc_view" class="pre-scrollable">
+
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="form-group">
-                            <div class="col-md-4">
-                                <br><button  class="btn btn-info" onclick="refresh()" id="refresh">Refresh</button>
+                            <div class="col-sm-offset-6">
+                                <!--<br><button  class="btn btn-info" onclick="refresh()" id="refresh">Refresh</button>-->
 
                                 <button class="btn btn-success" onclick="sign_contract()"  id="sign_contract">Sign</button>
                             </div>
@@ -40,16 +38,31 @@
 </div>
 
     <script>
+
         $( function() {
             $("#nav_received").tab('show');
             count_contracts();
             //enable to refresh at page load:
             refresh();
+
+            $("#contracts").on('click','.card',function(){
+                $(".card.active").removeClass('active');
+                $(this).addClass('active');
+
+                id = $(this).attr('id');
+                index = id.substring(id.indexOf("_")+1);
+                console.log("index "+index);
+                $("#doc_view").children().addClass('hidden');
+                $("#doc_"+index).removeClass('hidden');
+            });
+
         });
+
 
         function refresh() {
             console.log("refreshing");
             $("#contracts").empty();
+            $("#doc_view").html("");
 
             var contracts_fetched = function(data) {
                 console.log("fetched");
@@ -62,21 +75,22 @@
             };
             $.post("/api/1/load_contracts", null, contracts_fetched );
 
-
-
         }
 
         function add_entry(block,index) {
             contracts = $("#contracts");
+            doc_view = $("#doc_view");
 
             title = "Contract "+index; //this is an internal index for the page, not the index on the chain; each entry needs a unique identifier for the collapse functionality
             contents = block.data;
 
             //new_entry = '<li class="list-group-item card"><a data-toggle="collapse" data-parent="#contracts" href="#test"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>'+title+'</a><ul id="test" class="collapse"><li>Test</li></ul> </li>';
-            new_entry = '<li class="list-group-item card"><div class="card-header" id="header_'+index+'"><button class="btn btn-xs" data-toggle="collapse" data-parent="#contracts" data-target="#body_'+index+'" aria-controls="collapse"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>&nbsp;</button>'+title+'</div><ul id="body_'+index+'" class="collapse" aria-labelledby="header_'+index+'" data-parent="#contracts"><li>'+contents+'</li></ul> </li>';
-
-
+            //new_entry = '<li class="list-group-item card"><div class="card-header" id="header_'+index+'"><button class="btn btn-xs" data-toggle="collapse" data-parent="#contracts" data-target="#body_'+index+'" aria-controls="collapse"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>&nbsp;</button>'+title+'</div><ul id="body_'+index+'" class="collapse" aria-labelledby="header_'+index+'" data-parent="#contracts"><li>'+contents+'</li></ul> </li>';
+            var new_entry = '<li class="list-group-item card btn" id="card_'+index+'">Contract '+index+'<div class="hidden">'+contents+'</div></li>';
+            var doc_entry = '<div class="hidden" id="doc_'+index+'">'+contents+'</div>';
+            console.log("contents: "+contents);
             contracts.append(new_entry);
+            doc_view.append(doc_entry);
         }
 
         function sign_contract() {
