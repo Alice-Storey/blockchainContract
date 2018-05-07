@@ -1,74 +1,142 @@
 <html lang="en">
    <%- include header %>
    <!-- Main component for a primary marketing message or call to action -->
-<div class="container">
-    <div class="jumbotron">
-        <div class="container">
-        <h1>Received</h1>
-        <p>Received</p>
+<div class="container-fluid">
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container-fluid">
+            <br>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Contracts</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <ul class="list-group pre-scrollable" id="contracts"> <!--HEIGHT: look in CSS in HEADER , starts table and makes scrollable-->
 
-        <table style="width:70%" id=contracts>
-            <tr>
-                <th>Title</th>
-                <th>Signed</th>
-            </tr>
-            <tr>
-                <td><input type="checkbox" name="contract1" />Test Agreement #1</td>
-                <td>4/1/18</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" name="contract2" />Test Agreement #2</td>
-                <td>no</td>
-            </tr>
-        </table>
+                            </ul>
+                        </div>
+                        <div class="col-sm-6">
+                            <div id="doc_view" class="pre-scrollable">
 
-        <br><button onclick="refresh()" type="button" id="refresh">Refresh</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-offset-6" id="doc_buttons">
+                                <!--<br><button  class="btn btn-info" onclick="refresh()" id="refresh">Refresh</button>-->
+                                <button class="btn btn-success" onclick="sign_contract()"  id="sign_contract">Sign</button>
 
-        <button onclick="sign_contract()" type="button" id="sign_contract">Sign</button>
-
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 </div>
 
     <script>
+        var blocks_stringified = "";
         $( function() {
             $("#nav_received").tab('show');
+            count_contracts();
             //enable to refresh at page load:
-            //refresh();
+            refresh();
+
+            $("#contracts").on('click','.card',function(){
+                $(".card.active").removeClass('active');
+                $(this).addClass('active');
+
+                id = $(this).attr('id');
+                index = id.substring(id.indexOf("_")+1);
+                console.log("clicked index "+index);
+
+                var blocks = JSON.parse(blocks_stringified);
+                var contents = blocks[index].data;
+                var decrypted_contents = decrypt(contents);
+                $("#doc_view").html(decrypted_contents);
+
+
+            });
+
         });
+
+        function decrypt(contents) {
+
+            //do something with contents
+
+            return contents;
+        }
+
 
         function refresh() {
-            var contracts = $("#contracts")
+            console.log("refreshing");
+            $("#contracts").empty();
+            $("#doc_view").html("");
 
-            //dev test purposes/example of usage:
-            var newContractName = "contract3";
-            var newContractTitle = "Test Agreement #3";
-            var newTr = '<tr><td><input type="checkbox" name="'+newContractName+'" />'+newContractTitle+'</td><td>no</td></tr>';
-            contracts.append(newTr);
-
-
-            //implementation
-
-            var data_refreshed = function(data){
+            var contracts_fetched = function(data) {
+                console.log("fetched");
                 console.log(data);
-            }
+                $("#num_contracts").html(data.length);
 
-            $.post("/api/1/load_contracts", null, data_refreshed);
+                blocks_stringified =JSON.stringify(data);
+                //puts into global variable containing the blocks json as a string
+                //the following line gets the string back as an object to do things with
+                //var reparsed = JSON.parse(stringified);
+
+                data.forEach( function(block,index) {
+                    add_entry(block,index);
+                });
+            };
+            $.post("/api/1/load_contracts", null, contracts_fetched );
+
         }
 
+        function add_entry(block,index) {
+            contracts = $("#contracts");
+            doc_view = $("#doc_view");
+
+            title = "Contract "+index; //this is an internal index for the page, not the index on the chain; each entry needs a unique identifier for the collapse functionality
+            contents = block.data;
+
+            var timestamp = block.timestamp;
+            var date = new Date(timestamp*1000);
+            var dateString = date.toDateString();
+            dateString = dateString.substring(dateString.indexOf(" ")+1) + " - " + date.toTimeString().substring(0,date.toTimeString().indexOf(" "));
+            console.log("timestamp: "+dateString);
+
+
+            //new_entry = '<li class="list-group-item card"><a data-toggle="collapse" data-parent="#contracts" href="#test"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>'+title+'</a><ul id="test" class="collapse"><li>Test</li></ul> </li>';
+            //new_entry = '<li class="list-group-item card"><div class="card-header" id="header_'+index+'"><button class="btn btn-xs" data-toggle="collapse" data-parent="#contracts" data-target="#body_'+index+'" aria-controls="collapse"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>&nbsp;</button>'+title+'</div><ul id="body_'+index+'" class="collapse" aria-labelledby="header_'+index+'" data-parent="#contracts"><li>'+contents+'</li></ul> </li>';
+            var new_entry = '<li class="list-group-item card btn" id="card_'+index+'">'+dateString+'<div class="hidden">'+contents+'</div></li>';
+            //var doc_entry = '<div class="hidden" id="doc_'+index+'">'+contents+'</div>';
+            console.log("contents: "+contents);
+            contracts.append(new_entry);
+            //doc_view.append(doc_entry);
+        }
+
+        //signs contract at index (local index of user's blocks, not on chain)
         function sign_contract() {
 
-            //implementation
+            selected = $(".card.active")[0];
+            id = $(selected).attr('id');
+            index = id.substring(id.indexOf("_")+1);
 
+            var blocks = JSON.parse(blocks_stringified);
+            var BlockchainIndex = blocks[index].index; //this is the index on the global chain, to be passed by post request
+            console.log("ready to sign "+index);
             var contract_signed = function(data){
-                console.log(data);
+                console.log("signing user's block " + index + " which is at " + BlockchainIndex + " globally");
+                console.log("status code "+data);
             }
 
-            $.post("/api/1/sign_contract", null, contract_signed);
+            var private_key = "myPrivateKey"; //replace to load private key from somewhere
+
+            $.post("/api/1/sign_contract", {index:BlockchainIndex,private_key:private_key}, contract_signed);
         }
-        $( function() {
-            sign_contract();
-        });
+
 
 
     </script>
