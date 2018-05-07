@@ -236,6 +236,12 @@ exports.send = function(req, res, next){
         var message = "";
         if (filesize<512) {
             // do something with the file contents
+            //file is contents
+            //public_key is key
+
+
+
+
             message = "Successfully sent.";
         }
         else {
