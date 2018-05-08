@@ -91,7 +91,6 @@
 
                 id = $(this).attr('id');
                 index = id.substring(id.indexOf("_")+1);
-                console.log("clicked index "+index);
 
                 $("#contracts").find("button").addClass("hidden");
                 $(this).find("button").removeClass("hidden");
@@ -100,20 +99,21 @@
                 var blocks = JSON.parse(blocks_stringified);
                 var contents = blocks[index].data;
 
+                //reminder: add a check if contents have been decrypted already
+
                 $("#doc_view").html(contents);
             });
 
             $("#contracts").on('click','.btn',function(){
                 id = $(this).attr('id');
                 index = id.substring(id.indexOf("_")+1);
-                console.log("decrypting index "+index);
+                console.log("clicked decrypt");
                 var blocks = JSON.parse(blocks_stringified);
                 var contents = blocks[index].data;
-                var private_key = ""; ////////change to get key
-                var decrypted = decrypt(contents, private_key);
+                var decrypted = decrypt(contents);
 
                 blocks_decrypted.set(index, decrypted);
-
+                $("#doc_view").html(decrypted);
 
             });
 
@@ -142,17 +142,14 @@
 
         });
 
-        function decrypt(contents, private_key="0") {
-
-            //do something with contents
-            console.log(data);
-
+        function decrypt(contents) {
+            console.log("decrypting");
             var decrypt_contract = function(data) {
+              console.log("decrypting:"+contents);
+              console.log("got:"+data);
               return data;
             };
-            $('/api/1/decrypt_contract',{contents:contents,private_key:private_key},decrypt_contract)
-
-
+            $.post('/api/1/decrypt_contract',{contents:contents},decrypt_contract)
         }
 
 

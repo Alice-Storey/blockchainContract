@@ -408,11 +408,12 @@ var encrypt_contract = function(contract, public_key) {
 
 
 exports.decrypt_contract = function(req, res) {
+
   var encrypted_contract = req.body.contents;
-  var private_key = req.body.public_key;
+   console.log("decrypting this:" + encrypted_contract);
   var buffer = new Buffer(encrypted_contract, "base64");
   var decrypted_contract = crypto.privateDecrypt({
-    "key": private_key,
+    "key": my_private_key,
     padding: constants.RSA_PKCS1_PADDING
   }, buffer);;
   var decrypted_contract = decrypted_contract.toString("utf8");
