@@ -132,7 +132,8 @@ exports.received = function(req, res, next) {
 
   db.query(sql, function(err, results) {
     res.render('received.ejs', {
-      user: user
+      user: user,
+      private_key: my_private_key
     });
   });
 
@@ -436,8 +437,7 @@ exports.upload_private_key = function(req, res, next){
     console.log("uploaded private key:" + file);
     my_private_key = file;
     console.log("saved: "+my_private_key);
-    res.render("received.ejs", {message:"Private key uploaded successfully."});
+    res.render("received.ejs", {message:"Private key uploaded successfully.",private_key: my_private_key});
 
 
 }
-
