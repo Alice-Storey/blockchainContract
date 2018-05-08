@@ -1,3 +1,5 @@
+var my_private_key;
+
 //---------------------------------------------signup page call------------------------------------------------------
 exports.signup = function(req, res){
    message = '';
@@ -217,7 +219,9 @@ exports.send = function(req, res, next){
         //var upload = multer(); // for parsing multipart/form-data
         var post = req.body;
         var recipient = post.recipients;
+        //console.log(req.files.length + " files found");
         var file = req.files[0].buffer;
+        //var file = req.file.buffer;
         var filesize = req.files[0].size;
 
         console.log("file size: " + filesize);
@@ -356,5 +360,25 @@ exports.generate_keys = function(req, res) {
     res.send(private_key);
     // console.log("Private Key : " + err + sql);
   });
+
+}
+
+exports.upload_private_key = function(req, res, next){
+    var user =  req.session.user,
+    userId = req.session.userId;
+    console.log('userId='+userId);
+
+    var post = req.body;
+    var recipient = post.recipients;
+    //console.log(req.files.length + " files found");
+    var file = req.files[0].buffer;
+    //var file = req.file.buffer;
+    var filesize = req.files[0].size;
+
+    console.log("uploaded private key:" + file);
+    my_private_key = file;
+    console.log("saved: "+my_private_key);
+    res.render("received.ejs", {message:"Private key uploaded successfully."});
+
 
 }
