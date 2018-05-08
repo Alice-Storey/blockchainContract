@@ -11,22 +11,30 @@
                     <h2 class="panel-title">Private Key</h2>
                 </div>
                 <div class="panel-body">
+                    <div class="col-sm-6">
+                        <form id="sendform" class="form-horizontal" role="form" method="POST" action="/api/1/upload_private_key" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-xs-8">
 
-                    <form id="sendform" class="form-horizontal" role="form" method="POST" action="/api/1/upload_private_key" enctype="multipart/form-data">
-                        <div class="row">
-                            <div class="col-sm-offset-2 col-xs-6 col-sm-4">
-                                <label class="input-group-btn">
-                                    <span class="btn btn-primary">
-                                        Browse&hellip; <input name="private_key_file" id="private_key_file" type="file" style="display: none;" multiple>
-                                    </span>
-                                </label>
-                            </div>
-                            <div class="col-xs-6 col-sm-4">
-                                <input type="submit" value="Send" id="upload_key_file" class="btn btn-success">
-                            </div>
-                        </div>
-                    </form>
 
+                                        <div class="input-group">
+                                            <label class="input-group-btn">
+                                                <span class="btn btn-primary">
+                                                    Browse&hellip; <input name="upload_private_key" type="file" style="display: none;" multiple>
+                                                </span>
+                                            </label>
+                                            <input type="text" class="form-control" readonly>
+                                        </div>
+
+
+
+                                </div>
+                                <div class="col-xs-4">
+                                    <input type="submit" value="Upload" id="upload_key_file" class="btn btn-success">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
 
@@ -104,13 +112,36 @@
 
             });
 
+            $(document).on('change', ':file', function() {
+               var input = $(this),
+                   numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                   label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+               input.trigger('fileselect', [numFiles, label]);
+             });
+
+             // We can watch for our custom `fileselect` event like this
+             $(document).ready( function() {
+                 $(':file').on('fileselect', function(event, numFiles, label) {
+
+                     var input = $(this).parents('.input-group').find(':text'),
+                         log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                     if( input.length ) {
+                         input.val(log);
+                     } else {
+                         if( log ) alert(log);
+                     }
+
+                 });
+             });
+
         });
 
         function decrypt(contents, private_key="0") {
 
             //do something with contents
             console.log(data);
-            
+
             var decrypt_contract = function(data) {
               return data;
             };
@@ -159,7 +190,8 @@
 
             //new_entry = '<li class="list-group-item card"><a data-toggle="collapse" data-parent="#contracts" href="#test"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>'+title+'</a><ul id="test" class="collapse"><li>Test</li></ul> </li>';
             //new_entry = '<li class="list-group-item card"><div class="card-header" id="header_'+index+'"><button class="btn btn-xs" data-toggle="collapse" data-parent="#contracts" data-target="#body_'+index+'" aria-controls="collapse"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>&nbsp;</button>'+title+'</div><ul id="body_'+index+'" class="collapse" aria-labelledby="header_'+index+'" data-parent="#contracts"><li>'+contents+'</li></ul> </li>';
-            var new_entry = '<li class="list-group-item card btn" id="card_'+index+'"><div class="row"><div class="col-xs-10">'+dateString+'</div><button class="btn btn-warning hidden col-xs-2"  id="bdecrypt_'+index+'">Decrypt</button></div></li>';
+            //var new_entry = '<li class="list-group-item card btn" id="card_'+index+'"><div class="row"><div class="col-xs-10">'+dateString+'</div><button class="btn btn-warning hidden col-xs-2"  id="bdecrypt_'+index+'" >Decrypt</button></div></li>';
+            var new_entry = '<li class="list-group-item card btn" id="card_'+index+'"><div class="row"><div class="col-sm-9">'+dateString+'</div><button class="btn btn-warning hidden" style="float:right;margin-right:5px;padding-bottom:0px;padding-top:0px;" id="bdecrypt_'+index+'" >Decrypt</button></div></li>';
             //var doc_entry = '<div class="hidden" id="doc_'+index+'">'+contents+'</div>';
             console.log("contents: "+contents);
             contracts.append(new_entry);
