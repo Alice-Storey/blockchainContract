@@ -2,14 +2,9 @@
   "name": "node-restapi",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "blockChainUI.js",
   "scripts": {
     "start": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": {
-    "name": "Adam",
-    "email": "jstutorials1@gmail.com",
-    "url": "http://www.js-tutorials.com/"
   },
   "license": "MIT",
   "dependencies": {

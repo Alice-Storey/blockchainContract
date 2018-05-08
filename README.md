@@ -4,15 +4,18 @@ Blockchain contract is an application that leverages blockchain technology to di
 ## Requirements
 ##### - Frontend Engine
 ```
-  - Docker 18.03.1-ce-mac65 (24312)
   - NodeJS v10.0.0
-  - Admin port 3333
-  - User port 8080
+  - blockChainServer
+    - Port 9090
+  - blockChainUI
+    - Port 8080
 ```
 
 ##### - Back-End Engine
 ```
+  - Docker 18.03.1-ce-mac65 (24312)
   - MySQL 5.7.21
+  - Admin port 3333
 ```
 
 ##### - NPM Libraries :
@@ -31,7 +34,7 @@ Blockchain contract is an application that leverages blockchain technology to di
   "request": "2.85.0"
 ```
 
-##### - Database Structure
+##### - Database Design
 
 ```
 CREATE TABLE `blockchaincontract`.`contracts` (
@@ -52,16 +55,34 @@ CREATE TABLE IF NOT EXISTS `blockchaincontract`.`users` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=4 ;
 
 ```
-### Install and Run Instructions for UBUNTU 
+
+## Installation
+### Linux only
+How to install NodeJS
 ```
-  Steps to install NODE.JS  
   Step 1: curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
   Step 2: sudo apt-get install -y nodejs
   Step 3: Go into the directory of the project. Run 'npm install' and it will install all the dependencies of the program
-  Step 4: Run 'node server.js' 
+  Step 4: Run 'node blockChainServer.js'
+  Step 5: Run 'node blockChainUI.js'
+```
+### Mac Only
+How to install NodeJS
 ```
 
-### HTTP API
+```
+
+### Windows only
+```
+
+```
+
+## Example
+```
+
+```
+
+## HTTP API
 
 ##### Get blockchain
 ```
