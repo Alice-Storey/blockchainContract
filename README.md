@@ -62,9 +62,10 @@ How to install NodeJS
 ```
   Step 1: curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
   Step 2: sudo apt-get install -y nodejs
-  Step 3: Go into the directory of the project. Run 'npm install' and it will install all the dependencies of the program
-  Step 4: Run 'node blockChainServer.js'
-  Step 5: Run 'node blockChainUI.js'
+  Step 3: sudo apt install npm
+  Step 4: Go into the directory of the project. Run 'npm install' and it will install all the dependencies of the program
+  Step 5: Run 'node blockChainServer.js'
+  Step 6: Run 'node blockChainUI.js'
 ```
 ### Mac Only
 How to install NodeJS
