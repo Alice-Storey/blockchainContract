@@ -132,7 +132,8 @@ exports.received = function(req, res, next) {
 
   db.query(sql, function(err, results) {
     res.render('received.ejs', {
-      user: user
+      user: user,
+      private_key: my_private_key
     });
   });
 
@@ -158,7 +159,7 @@ exports.load_contracts = function(req, res, next) {
 
 
       res.send(body.filter(function(block) { //send filtered list
-        return block.username == user.user_name; //test used for filter
+        return block.public_key == user.public_key; //test used for filter
       }));
     }
   })
@@ -407,11 +408,12 @@ var encrypt_contract = function(contract, public_key) {
 
 
 exports.decrypt_contract = function(req, res) {
+
   var encrypted_contract = req.body.contents;
-  var private_key = req.body.public_key;
+   console.log("decrypting this:" + encrypted_contract);
   var buffer = new Buffer(encrypted_contract, "base64");
   var decrypted_contract = crypto.privateDecrypt({
-    "key": private_key,
+    "key": my_private_key,
     padding: constants.RSA_PKCS1_PADDING
   }, buffer);;
   var decrypted_contract = decrypted_contract.toString("utf8");
@@ -436,8 +438,7 @@ exports.upload_private_key = function(req, res, next){
     console.log("uploaded private key:" + file);
     my_private_key = file;
     console.log("saved: "+my_private_key);
-    res.render("received.ejs", {message:"Private key uploaded successfully."});
+    res.render("received.ejs", {message:"Private key uploaded successfully.",private_key: my_private_key});
 
 
 }
-

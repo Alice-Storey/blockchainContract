@@ -11,22 +11,35 @@
                     <h2 class="panel-title">Private Key</h2>
                 </div>
                 <div class="panel-body">
-
-                    <form id="sendform" class="form-horizontal" role="form" method="POST" action="/api/1/upload_private_key" enctype="multipart/form-data">
-                        <div class="row">
-                            <div class="col-sm-offset-2 col-xs-6 col-sm-4">
-                                <label class="input-group-btn">
-                                    <span class="btn btn-primary">
-                                        Browse&hellip; <input name="private_key_file" id="private_key_file" type="file" style="display: none;" multiple>
-                                    </span>
-                                </label>
+                    <div class="col-sm-6">
+                        <form id="sendform" class="form-horizontal" role="form" method="POST" action="/api/1/upload_private_key" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <div class="input-group">
+                                        <label class="input-group-btn">
+                                            <span class="btn btn-primary">
+                                                Browse&hellip; <input name="upload_private_key" type="file" style="display: none;" multiple>
+                                            </span>
+                                        </label>
+                                        <input type="text" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-xs-4">
+                                    <input type="submit" value="Upload" id="upload_key_file" class="btn btn-success">
+                                </div>
                             </div>
-                            <div class="col-xs-6 col-sm-4">
-                                <input type="submit" value="Send" id="upload_key_file" class="btn btn-success">
+                        </form>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="panel panel-info form-group col-sm-10 col-sm-offset-1">
+                            <div class="row">
+                                <!--<div class="col-xs-12 pre-scrollable" style="min-height:45px;max-height:45px;">-->
+                                <div class="col-xs-12" style="word-wrap: break-word;">
+                                    <%=private_key%>
+                                </div>
                             </div>
                         </div>
-                    </form>
-
+                    </div>
                 </div>
             </div>
 
@@ -72,51 +85,90 @@
             //enable to refresh at page load:
             refresh();
 
-            $("#contracts").on('click','.card',function(){
-                $(".card.active").removeClass('active');
-                $(this).addClass('active');
+            $("#contracts").on('click','.card',function(events){
+                //console.log("eventargs got:"+$(events.target).hasClass("btn-warning")  );
+                if (! $(events.target).hasClass("btn-warning") ) {//if anything except the button was clicked
 
-                id = $(this).attr('id');
-                index = id.substring(id.indexOf("_")+1);
-                console.log("clicked index "+index);
+                    $(".card.active").removeClass('active');
+                    $(this).addClass('active');
 
-                $("#contracts").find("button").addClass("hidden");
-                $(this).find("button").removeClass("hidden");
-                //$("#btn_decrypt_"+index).removeClass("hidden");
+                    id = $(this).attr('id');
+                    index = id.substring(id.indexOf("_")+1);
+                    //console.log("clicked index"+index);
 
-                var blocks = JSON.parse(blocks_stringified);
-                var contents = blocks[index].data;
+                    $("#contracts").find("button").addClass("hidden");
+                    $(this).find("button").removeClass("hidden");
+                    //$("#btn_decrypt_"+index).removeClass("hidden");
 
-                $("#doc_view").html(contents);
+                    var blocks = JSON.parse(blocks_stringified);
+                    var contents = blocks[index].data;
+
+                    //reminder: add a check if contents have been decrypted already
+                    if (blocks_decrypted.has(index) ) {
+                        console.log("block cache found");
+                        $("#doc_view").html(blocks_decrypted.get(index) );
+                        $("#doc_view").css("color", "black");
+                    }
+                    else {
+                        $("#doc_view").html(contents);
+                        $("#doc_view").css("color", "red");
+                    }
+                }
             });
 
-            $("#contracts").on('click','.btn',function(){
+            $("#contracts").on('click','.btn-warning',function(){
                 id = $(this).attr('id');
-                index = id.substring(id.indexOf("_")+1);
-                console.log("decrypting index "+index);
-                var blocks = JSON.parse(blocks_stringified);
-                var contents = blocks[index].data;
-                var private_key = ""; ////////change to get key
-                var decrypted = decrypt(contents, private_key);
+                if (id.includes("bdecrypt")) {
+                    index = id.substring(id.indexOf("_")+1);
+                    //console.log("clicked "+id);
+                    var blocks = JSON.parse(blocks_stringified);
+                    var contents = blocks[index].data;
+                    var decrypted = decrypt(contents);
 
-                blocks_decrypted.set(index, decrypted);
-
+                    blocks_decrypted.set(index, decrypted);
+                    $("#doc_view").html(decrypted);
+                    $("#doc_view").css("color", "black");
+                    $("#lock_"+index).css("visibility","hidden");
+                }
 
             });
+
+            $(document).on('change', ':file', function() {
+               var input = $(this),
+                   numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                   label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+               input.trigger('fileselect', [numFiles, label]);
+             });
+
+             // We can watch for our custom `fileselect` event like this
+             $(document).ready( function() {
+                 $(':file').on('fileselect', function(event, numFiles, label) {
+
+                     var input = $(this).parents('.input-group').find(':text'),
+                         log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                     if( input.length ) {
+                         input.val(log);
+                     } else {
+                         if( log ) alert(log);
+                     }
+
+                 });
+             });
 
         });
 
-        function decrypt(contents, private_key="0") {
+        function decrypt(contents) {
 
-            //do something with contents
-            console.log(data);
-            
+
+
+            console.log("decrypting");
             var decrypt_contract = function(data) {
+              console.log("decrypting:"+contents);
+              console.log("got:"+data);
               return data;
             };
-            $('/api/1/decrypt_contract',{contents:contents,private_key:private_key},decrypt_contract)
-
-
+            $.post('/api/1/decrypt_contract',{contents:contents},decrypt_contract)
         }
 
 
@@ -159,7 +211,8 @@
 
             //new_entry = '<li class="list-group-item card"><a data-toggle="collapse" data-parent="#contracts" href="#test"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>'+title+'</a><ul id="test" class="collapse"><li>Test</li></ul> </li>';
             //new_entry = '<li class="list-group-item card"><div class="card-header" id="header_'+index+'"><button class="btn btn-xs" data-toggle="collapse" data-parent="#contracts" data-target="#body_'+index+'" aria-controls="collapse"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>&nbsp;</button>'+title+'</div><ul id="body_'+index+'" class="collapse" aria-labelledby="header_'+index+'" data-parent="#contracts"><li>'+contents+'</li></ul> </li>';
-            var new_entry = '<li class="list-group-item card btn" id="card_'+index+'"><div class="row"><div class="col-xs-10">'+dateString+'</div><button class="btn btn-warning hidden col-xs-2"  id="bdecrypt_'+index+'">Decrypt</button></div></li>';
+            //var new_entry = '<li class="list-group-item card btn" id="card_'+index+'"><div class="row"><div class="col-xs-10">'+dateString+'</div><button class="btn btn-warning hidden col-xs-2"  id="bdecrypt_'+index+'" >Decrypt</button></div></li>';
+            var new_entry = '<li class="list-group-item card btn" id="card_'+index+'"><div class="row"><div id="lock_'+index+'" style="float:left;margin-left:5px;"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></div><div class="col-sm-9"><center>'+dateString+'</center></div><button class="btn btn-warning hidden" style="float:right;margin-right:5px;padding-bottom:0px;padding-top:0px;" id="bdecrypt_'+index+'" >Decrypt</button></div></li>';
             //var doc_entry = '<div class="hidden" id="doc_'+index+'">'+contents+'</div>';
             console.log("contents: "+contents);
             contracts.append(new_entry);
