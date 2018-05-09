@@ -402,7 +402,7 @@ var encrypt_contract = function(contract, public_key) {
       "key": public_key,
       padding: constants.RSA_PKCS1_PADDING
     },
-    buffer);;
+    buffer);
   return encrypted_contract.toString("base64");
 };
 
@@ -423,7 +423,8 @@ exports.decrypt_contract = function(req, res) {
   }
   catch (error) {
     console.log(error);
-    res.send( req.body.contents);
+    console.log("error encountered, returning contents:" + String(req.body.contents) );
+    res.send( String(req.body.contents) );
   }
 };
 

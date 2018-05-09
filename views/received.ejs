@@ -105,7 +105,8 @@
 
                     //reminder: add a check if contents have been decrypted already
                     if (blocks_decrypted.has(index) ) {
-                        console.log("block cache found");
+                        console.log("block cache found, index:"+index);
+                        console.log("cache is:"+blocks_decrypted.get(index));
                         $("#doc_view").html(blocks_decrypted.get(index) );
                         $("#doc_view").css("color", "black");
                     }
@@ -123,12 +124,10 @@
                     //console.log("clicked "+id);
                     var blocks = JSON.parse(blocks_stringified);
                     var contents = blocks[index].data;
-                    var decrypted = decrypt(contents);
+                    console.log("about to decrypt");
+                    decrypt(contents);
 
-                    blocks_decrypted.set(index, decrypted);
-                    $("#doc_view").html(decrypted);
-                    $("#doc_view").css("color", "black");
-                    $("#lock_"+index).css("visibility","hidden");
+
                 }
 
             });
@@ -162,13 +161,24 @@
 
             //return "decrypted" + contents;
 
-            console.log("decrypting");
+            console.log("entered function decrypt()");
             var decrypt_contract = function(data) {
-              console.log("decrypting:"+contents);
-              console.log("got:"+data);
-              return data;
+              console.log("decrypt() - decrypting:"+contents);
+              console.log("decrypt() got:"+data);
+
+              console.log("caching decrypted contents:" + String(data) );
+              blocks_decrypted.set(index, String(data));
+              console.log("cache is:"+String( blocks_decrypted.get(index) ) );
+
+              $("#doc_view").html(data);
+              $("#doc_view").css("color", "black");
+              $("#lock_"+index).css("visibility","hidden");
+
+
+              return;
             };
             $.post('/api/1/decrypt_contract',{contents:contents},decrypt_contract)
+            console.log("decrypt() end, post request submitted");
         }
 
 
