@@ -34,7 +34,7 @@
                         <div class="panel panel-info form-group col-sm-10 col-sm-offset-1">
                             <div class="row">
                                 <!--<div class="col-xs-12 pre-scrollable" style="min-height:45px;max-height:45px;">-->
-                                <div class="col-xs-12" style="word-wrap: break-word;">
+                                <div class="col-xs-12 pre-scrollable" style="word-wrap: break-word; min-height: 20px;max-height: 80px;">
                                     <%=private_key%>
                                 </div>
                             </div>
@@ -160,7 +160,7 @@
 
         function decrypt(contents) {
 
-
+            //return "decrypted" + contents;
 
             console.log("decrypting");
             var decrypt_contract = function(data) {
