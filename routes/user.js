@@ -159,7 +159,7 @@ exports.load_contracts = function(req, res, next) {
 
 
       res.send(body.filter(function(block) { //send filtered list
-        return block.username == user.user_name; //test used for filter
+        return block.public_key == user.public_key; //test used for filter
       }));
     }
   })
