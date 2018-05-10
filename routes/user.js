@@ -186,7 +186,7 @@ exports.num_contracts = function(req, res, next) {
       console.log(user.user_name);
       */
       users_blocks = body.filter(function(block) { //send filtered list
-        return block.username == user.user_name; //test used for filter
+        return block.public_key == user.public_key; //test used for filter
       });
       console.log("length: " + users_blocks.length);
       res.send([users_blocks.length]);
@@ -369,6 +369,7 @@ exports.editprofile = function(req, res) {
 };
 
 exports.generate_keys = function(req, res) {
+  console.log("generating keys");
   var userId = req.session.userId;
   if (userId == null) {
     res.redirect("/login");
@@ -401,24 +402,30 @@ var encrypt_contract = function(contract, public_key) {
       "key": public_key,
       padding: constants.RSA_PKCS1_PADDING
     },
-    buffer);;
+    buffer);
   return encrypted_contract.toString("base64");
 };
 
 
 
 exports.decrypt_contract = function(req, res) {
+  try {
+    var encrypted_contract = req.body.contents;
+     console.log("decrypting this:" + encrypted_contract);
+    var buffer = new Buffer(encrypted_contract, "base64");
+    var decrypted_contract = crypto.privateDecrypt({
+      "key": my_private_key,
+      padding: constants.RSA_PKCS1_PADDING
+    }, buffer);;
+    var decrypted_contract = decrypted_contract.toString("utf8");
 
-  var encrypted_contract = req.body.contents;
-   console.log("decrypting this:" + encrypted_contract);
-  var buffer = new Buffer(encrypted_contract, "base64");
-  var decrypted_contract = crypto.privateDecrypt({
-    "key": my_private_key,
-    padding: constants.RSA_PKCS1_PADDING
-  }, buffer);;
-  var decrypted_contract = decrypted_contract.toString("utf8");
-
-  res.send(decrypted_contract);
+    res.send(decrypted_contract);
+  }
+  catch (error) {
+    console.log(error);
+    console.log("error encountered, returning contents:" + String(req.body.contents) );
+    res.send( String(req.body.contents) );
+  }
 };
 
 
