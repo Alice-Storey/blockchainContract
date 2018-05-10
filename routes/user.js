@@ -223,9 +223,6 @@ exports.sign_contract = function(req, res, next) {
 exports.send = function(req, res, next) {
   var user = req.session.user,
     userId = req.session.userId;
-  console.log('userId=' + userId);
-
-
 
   if (req.method == "POST") {
     //var multer = require('multer'); // v1.0.5
@@ -235,48 +232,126 @@ exports.send = function(req, res, next) {
     var file = req.files[0].buffer;
     var filesize = req.files[0].size;
 
-    console.log("file size: " + filesize);
-    console.log(String(file));
-    console.log("sending to uid " + recipient);
-    console.log(req);
-    var sql = "SELECT * FROM `blockchaincontract`.`users` WHERE `id`='" + recipient + "' order by last_name asc limit 1";
+    var http = require("http");
 
-    var public_key = 0;
+    var options = {
+      hostname: 'localhost',
+      port: 9090,
+      path: '/addBlock',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    };
+
+    var my_request = http.request(options, function(result) {
+      console.log('Status: ' + result.statusCode);
+      console.log('Headers: ' + JSON.stringify(result.headers));
+      result.setEncoding('utf8');
+      result.on('data', function(body) {
+        console.log('Body: ' + body);
+      });
+    });
+
+    my_request.on('error', function(e) {
+      console.log('problem with request: ' + e.message);
+    });
+
+    //   console.log("file size: " + filesize);
+    //   console.log(String(file));
+    //   console.log("sending to uid " + recipient);
+    //   console.log(req);
+    console.log("recipient is:" + recipient);
+    var sql = "SELECT * FROM `blockchaincontract`.`users` WHERE `id`='" + recipient + "' order by last_name asc limit 1";
+    //
+    //   var public_key = 0;
     db.query(sql, function(err, results) {
       if (err) {
         console.log(err);
+        res.render("send.ejs", {
+          message: "Error sending contract - could not find user."
+        });
       } else {
-        var public_key = results[0].public_key;
-        name = results[0].last_name + ', ' + results[0].first_name;
-        console.log(name + ': ' + public_key);
+        //console.log("results is:"+String(results[0]) );
+        //var my_public_key = results[0].public_key;
+        console.log("publickey:" + results[0].public_key);
+        var my_username = results[0].user_name;
+        var my_publickey = results[0].public_key;
+
+        // console.log("sending contract username:" + my_publickey);
+        // name = results[0].last_name + ', ' + results[0].first_name;
+        // console.log(name + ': ' + public_key);
 
         //use file
         //use public_key
         var contract = String(file);
+        var dummyVar = "/";
+        var dummyVar2 = "\n";
 
-        var encrypted_contract = encrypt_contract(contract, public_key);
-        console.log('Contract: ', contract);
-        console.log('Public Key: ', public_key);
-        console.log('Encrypted Contract: ', encrypted_contract);
+        var encrypted_contract = encrypt_contract(contract, my_publickey);
+        var pub_key = my_publickey;
+        var stringifiedKey = JSON.stringify(pub_key);
+        var parsedKey = JSON.parse(stringifiedKey);
+
+        //var pubKeySafe = makeJsonSafe(pub_key);
+        //var jsonPubKey = JSON.stringify(pubKeySafe);
+        //var my_contract = contract.replace(new RegExp(dummyVar, "g"), "\\");
+        var jsonPubKey = pub_key.slice(31, 396);
+        var jsonSafePubKey = makeJsonSafe(jsonPubKey);
+
+        // console.log('Public Key: ', my_publickey);
+        // console.log('stringified pub_key: ', stringifiedKey);
+        // console.log('parsed pub_key: \n', parsedKey);
+
+        //console.log('Encrypted Contract: ', encrypted_contract);
+        var jsonData = '{"data" : "'+ encrypted_contract +'", "username" : "' + my_username + '", "publickey" : '+JSON.stringify(pub_key)+'}';
+        //console.log('JSON Shit: \n', jsonshit);
+
+
+        my_request.write(jsonData);
+        my_request.end();
+        res.render("send.ejs", {
+          message: "Contract sent successfully."
+        });
 
       }
     });
 
-    var message = "";
-    if (filesize < 512) {
+    //
+    //   var message = "";
+    //   if (filesize < 512) {
+    //   // send to blockchain
+    //       var request = require("request");
+    //       var url = "http://localhost:9090/addBlock"; //api for blockchain
+    //       console.log("Sending contracts");
+    //       request({
+    //         url: url,
+    //         json: true
+    //       }, function(error, response, body) {
+    //         console.log("Sending...");
+    //         //if (!error && response.statusCode === 200) { //statuscode 200 is good!
+    //           console.log("200");
+    //           console.log("send - body" + body); // Print the json response - will be entire chain
+    //           console.log("send - usr" + user.user_name);
+    //         //}
+    //
+    //       /*
+    //       {"data" : "TEST BLOCK 4", "username" : "roven", "publickey" : "mypublickey"}
+    //       */
+    //       })
+    //
+    //
+    //     message = "Successfully sent.";
+    //   } else {
+    //     message = "File too large";
+    //     console.log("File too large.");
+    //   }
+    //   res.render('send.ejs', {
+    //     message: message
+    //   });
+    // write data to request body
 
 
-
-
-
-      message = "Successfully sent.";
-    } else {
-      message = "File too large";
-      console.log("File too large.");
-    }
-    res.render('send.ejs', {
-      message: message
-    });
   } else {
     if (userId == null) {
       res.redirect("/login");
@@ -288,6 +363,7 @@ exports.send = function(req, res, next) {
     });
   }
 };
+
 
 exports.load_recipients = function(req, res, next) {
   var user = req.session.user,
