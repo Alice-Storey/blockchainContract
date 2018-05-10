@@ -140,31 +140,39 @@ exports.received = function(req, res, next) {
 };
 
 exports.load_contracts = function(req, res, next) {
-  var user = req.session.user,
+    var user = req.session.user,
     userId = req.session.userId;
-  console.log('userId=' + userId);
+    console.log('userId=' + userId);
 
-  var request = require("request");
-  var url = "http://localhost:9090/GetBlockChain"; //api for blockchain
-  console.log("loading contracts");
-  request({
-    url: url,
-    json: true
-  }, function(error, response, body) {
-    console.log("fetching");
-    if (!error && response.statusCode === 200) { //statuscode 200 is good!
-      console.log("200");
-      console.log(body); // Print the json response - will be entire chain
-      console.log(user.user_name);
+    var request = require("request");
+    var url = "http://localhost:9090/GetBlockChain"; //api for blockchain
+    console.log("loading contracts");
+    request(
+        {url: url, json: true},
+        function(error, response, body) {
+            console.log("fetching");
+            if (!error && response.statusCode === 200) { //statuscode 200 is good!
+              console.log("200");
+              console.log(body); // Print the json response - will be entire chain
+              var sql = "SELECT * FROM `blockchaincontract`.`users` WHERE `id`='" + userId + "'";
+              console.log(sql);
+              db.query(sql, function(err, sql_result) {
+                  var public_key = sql_result[0].public_key;
+                  console.log("getting user - "+sql_result[0].user_name);
+                  console.log("getting user's key - "+sql_result[0].public_key);
 
+                  res.send(body.filter(function(block) { //send filtered list
+                      console.log("block:"+JSON.stringify(block) );
+                      console.log("filtering blocks - block is key:"+block.publicKey);
+                      console.log("filtering blocks - user is key:"+public_key);
+                    return block.publicKey == public_key; //test used for filter
+                  }));
 
-      res.send(body.filter(function(block) { //send filtered list
-        return block.public_key == user.public_key; //test used for filter
-      }));
-    }
-  })
-
-
+                });
+            }
+            else{console.log(error);}
+        }
+    );
 }
 
 exports.num_contracts = function(req, res, next) {
@@ -292,12 +300,6 @@ exports.send = function(req, res, next) {
         var pub_key = my_publickey;
         var stringifiedKey = JSON.stringify(pub_key);
         var parsedKey = JSON.parse(stringifiedKey);
-
-        //var pubKeySafe = makeJsonSafe(pub_key);
-        //var jsonPubKey = JSON.stringify(pubKeySafe);
-        //var my_contract = contract.replace(new RegExp(dummyVar, "g"), "\\");
-        var jsonPubKey = pub_key.slice(31, 396);
-        var jsonSafePubKey = makeJsonSafe(jsonPubKey);
 
         // console.log('Public Key: ', my_publickey);
         // console.log('stringified pub_key: ', stringifiedKey);
