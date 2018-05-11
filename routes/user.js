@@ -503,7 +503,7 @@ exports.decrypt_contract = function(req, res) {
     var decrypted_contract = crypto.privateDecrypt({
       "key": my_private_key,
       padding: constants.RSA_PKCS1_PADDING
-    }, buffer);;
+    }, buffer);
     var decrypted_contract = decrypted_contract.toString("utf8");
 
     res.send(decrypted_contract);
