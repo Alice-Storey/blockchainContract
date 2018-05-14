@@ -105,6 +105,7 @@
                                 </div>
                                 <div class="row">
                                     <center><h2>
+                                        <div id="key_loader" class="loader hidden"></div>
                                         <a download="private_key.txt" id="downloadlink" style="display: none"><span class="glyphicon glyphicon-download"aria-hidden="true"></span>Download Private Key</a>
                                     </center></h2>
                                 </div>
@@ -136,6 +137,16 @@
         count_contracts();
     });
 
+    function generate_start(){
+        $("#key_loader").removeClass("hidden");
+        $("#downloadlink").addClass("hidden");
+    }
+
+    function generate_end(){
+        $("#key_loader").addClass("hidden");
+        $("#downloadlink").removeClass("hidden");
+    }
+
     var textFile = null,
     makeTextFile = function (text) {
         var data = new Blob([text], {type: 'text/plain'});
@@ -152,12 +163,14 @@
     };
 
     function generate_keys() {
+        generate_start();
         console.log("generating keys");
         var keys_generated = function(data){
             //data is newly generated private key
             console.log(data);
             download(data[0]);
             $("#public_key_display").html(data[1]);
+            generate_end();
         }
         $.post("/api/1/generate_keys", null, keys_generated);
     }
