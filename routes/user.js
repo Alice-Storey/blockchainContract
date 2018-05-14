@@ -75,6 +75,7 @@ exports.login = function(req, res) {
         message = "";
         req.session.userId = results[0].id;
         req.session.user = results[0];
+        req.session.my_private_key = "";
         console.log(results[0].id);
         res.render('dashboard.ejs', {
           message: message
@@ -133,7 +134,7 @@ exports.received = function(req, res, next) {
   db.query(sql, function(err, results) {
     res.render('received.ejs', {
       user: user,
-      private_key: my_private_key
+      private_key: req.session.my_private_key
     });
   });
 
@@ -153,18 +154,18 @@ exports.load_contracts = function(req, res, next) {
             console.log("fetching");
             if (!error && response.statusCode === 200) { //statuscode 200 is good!
               console.log("200");
-              console.log(body); // Print the json response - will be entire chain
+              //console.log(body); // Print the json response - will be entire chain
               var sql = "SELECT * FROM `blockchaincontract`.`users` WHERE `id`='" + userId + "'";
               console.log(sql);
               db.query(sql, function(err, sql_result) {
                   var public_key = sql_result[0].public_key;
-                  console.log("getting user - "+sql_result[0].user_name);
-                  console.log("getting user's key - "+sql_result[0].public_key);
+                  //console.log("getting user - "+sql_result[0].user_name);
+                  //console.log("getting user's key - "+sql_result[0].public_key);
 
                   res.send(body.filter(function(block) { //send filtered list
-                      console.log("block:"+JSON.stringify(block) );
-                      console.log("filtering blocks - block is key:"+block.publicKey);
-                      console.log("filtering blocks - user is key:"+public_key);
+                     // console.log("block:"+JSON.stringify(block) );
+                     // console.log("filtering blocks - block is key:"+block.publicKey);
+                     // console.log("filtering blocks - user is key:"+public_key);
                     return block.publicKey == public_key; //test used for filter
                   }));
 
@@ -189,18 +190,18 @@ exports.num_contracts = function(req, res, next) {
           console.log("fetching");
           if (!error && response.statusCode === 200) { //statuscode 200 is good!
             console.log("200");
-            console.log(body); // Print the json response - will be entire chain
+            //console.log(body); // Print the json response - will be entire chain
             var sql = "SELECT * FROM `blockchaincontract`.`users` WHERE `id`='" + userId + "'";
             console.log(sql);
             db.query(sql, function(err, sql_result) {
                 var public_key = sql_result[0].public_key;
-                console.log("getting user - "+sql_result[0].user_name);
-                console.log("getting user's key - "+sql_result[0].public_key);
+                //console.log("getting user - "+sql_result[0].user_name);
+                //console.log("getting user's key - "+sql_result[0].public_key);
 
                 res.send(body.filter(function(block) { //send filtered list
-                    console.log("block:"+JSON.stringify(block) );
-                    console.log("filtering blocks - block is key:"+block.publicKey);
-                    console.log("filtering blocks - user is key:"+public_key);
+                    //console.log("block:"+JSON.stringify(block) );
+                    //console.log("filtering blocks - block is key:"+block.publicKey);
+                    //console.log("filtering blocks - user is key:"+public_key);
                   return block.publicKey == public_key; //test used for filter
               }));
 
@@ -499,9 +500,10 @@ exports.decrypt_contract = function(req, res) {
   try {
     var encrypted_contract = req.body.contents;
      console.log("decrypting this:" + encrypted_contract);
+     console.log("####SESSION PRIVATE KEY:"+ String(req.session.my_private_key) );
     var buffer = new Buffer(encrypted_contract, "base64");
     var decrypted_contract = crypto.privateDecrypt({
-      "key": my_private_key,
+      "key": req.session.my_private_key,
       padding: constants.RSA_PKCS1_PADDING
     }, buffer);
     var decrypted_contract = decrypted_contract.toString("utf8");
@@ -530,9 +532,9 @@ exports.upload_private_key = function(req, res, next){
     var filesize = req.files[0].size;
 
     console.log("uploaded private key:" + file);
-    my_private_key = file;
-    console.log("saved: "+my_private_key);
-    res.render("received.ejs", {message:"Private key uploaded successfully.",private_key: my_private_key});
+    req.session.my_private_key = String(file);
+    console.log("saved: "+req.session.my_private_key);
+    res.render("received.ejs", {message:"Private key uploaded successfully.",private_key: req.session.my_private_key});
 
 
 }

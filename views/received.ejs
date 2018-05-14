@@ -11,6 +11,13 @@
                     <h2 class="panel-title">Private Key</h2>
                 </div>
                 <div class="panel-body">
+                    <div id="warn_private_key" class="row">
+                        <span class="help-block">
+                            <font color="red"><center><i>
+                                Required: upload your private key text file, or contracts cannot be viewed.
+                            </i></center></font>
+                        </span>
+                    </div>
                     <div class="col-sm-6">
                         <form id="sendform" class="form-horizontal" role="form" method="POST" action="/api/1/upload_private_key" enctype="multipart/form-data">
                             <div class="row">
@@ -34,7 +41,7 @@
                         <div class="panel panel-info form-group col-sm-10 col-sm-offset-1">
                             <div class="row">
                                 <!--<div class="col-xs-12 pre-scrollable" style="min-height:45px;max-height:45px;">-->
-                                <div class="col-xs-12 pre-scrollable" style="word-wrap: break-word; min-height: 20px;max-height: 80px;">
+                                <div id="private_key_display" class="col-xs-12 pre-scrollable" style="word-wrap: break-word; min-height: 20px;max-height: 80px;">
                                     <%=private_key%>
                                 </div>
                             </div>
@@ -82,6 +89,11 @@
         $( function() {
             $("#nav_received").tab('show');
             count_contracts();
+
+
+            console.log("display html:"+$("#private_key_display").text());
+
+
             //enable to refresh at page load:
             refresh();
 
