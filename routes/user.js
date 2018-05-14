@@ -280,6 +280,10 @@ exports.send = function(req, res, next) {
     //   console.log("sending to uid " + recipient);
     //   console.log(req);
     console.log("recipient is:" + recipient);
+    if (recipient == -1){
+        res.render("send.ejs", {message:"Error: Recipient was not selected."} );
+        return;
+    }
     var sql = "SELECT * FROM `blockchaincontract`.`users` WHERE `id`='" + recipient + "' order by last_name asc limit 1";
     //
     //   var public_key = 0;
