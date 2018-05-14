@@ -537,4 +537,8 @@ exports.upload_private_key = function(req, res, next){
     res.render("received.ejs", {message:"Private key uploaded successfully.",private_key: req.session.my_private_key});
 
 
-}
+};
+
+exports.session_has_private_key = function(req, res, next){
+    res.send(req.session.my_private_key.length > 1);
+};
