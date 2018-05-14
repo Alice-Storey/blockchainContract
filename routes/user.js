@@ -141,7 +141,7 @@ exports.login = function(req, res) {
         req.session.my_private_key = "";
         console.log(results[0].id);
         res.render('dashboard.ejs', {
-          message: message
+          message: ""
         });
       } else {
         console.log('Query : ', sql);
