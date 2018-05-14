@@ -474,7 +474,7 @@ exports.generate_keys = function(req, res) {
   var sql = "UPDATE users SET public_key = '" + public_key + "' WHERE id=" + userId;
 
   db.query(sql, function(err, results) {
-    res.send(private_key);
+    res.send( {private_key, public_key} );
     // console.log("Private Key : " + err + sql);
   });
 
@@ -510,7 +510,7 @@ exports.decrypt_contract = function(req, res) {
   }
   catch (error) {
     console.log(error);
-    console.log("error encountered, returning contents:" + String(req.body.contents) );
+    console.log("error encountered, returning contents still encrypted:" + String(req.body.contents) );
     res.send( String(req.body.contents) );
   }
 };

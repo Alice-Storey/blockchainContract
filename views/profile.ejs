@@ -84,7 +84,9 @@
                         <div class="row">
                             <!--<div class="col-xs-12 pre-scrollable" style="min-height:45px;max-height:45px;">-->
                             <div class="col-xs-12" style="word-wrap: break-word;">
-                                <h4> <%=String(data[0].public_key)%> </h4>
+                                <h4><div id="public_key_display">
+                                    <%=String(data[0].public_key)%>
+                                </div></h4>
                             </div>
                         </div>
                     </div>
@@ -154,7 +156,8 @@
         var keys_generated = function(data){
             //data is newly generated private key
             console.log(data);
-            download(data);
+            download(data[0]);
+            $("#public_key_display").html(data[1]);
         }
         $.post("/api/1/generate_keys", null, keys_generated);
     }
