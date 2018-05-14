@@ -86,6 +86,7 @@
     <script>
         var blocks_stringified = "";
         var blocks_decrypted = new Map();
+        var has_key = false;
         $( function() {
             $("#nav_received").tab('show');
             count_contracts();
@@ -95,6 +96,7 @@
                 if (found_key) {
                     console.log("found key")
                     $("#warn_private_key").addClass("hidden");
+                    has_key = true;
                 }
             };
             $.post("/api/1/session_has_private_key", null, checked_for_private_key);
@@ -103,6 +105,7 @@
             //enable to refresh at page load:
             refresh();
 
+            //click card to view contract
             $("#contracts").on('click','.card',function(events){
                 //console.log("eventargs got:"+$(events.target).hasClass("btn-warning")  );
                 if (! $(events.target).hasClass("btn-warning") ) {//if anything except the button was clicked
@@ -135,15 +138,22 @@
                 }
             });
 
+            //click decrypt button to decrypt contract being displayed
             $("#contracts").on('click','.btn-warning',function(){
                 id = $(this).attr('id');
                 if (id.includes("bdecrypt")) {
-                    index = id.substring(id.indexOf("_")+1);
-                    //console.log("clicked "+id);
-                    var blocks = JSON.parse(blocks_stringified);
-                    var contents = blocks[index].data;
-                    console.log("about to decrypt");
-                    decrypt(contents);
+
+                    if (has_key) {
+                        index = id.substring(id.indexOf("_")+1);
+                        //console.log("clicked "+id);
+                        var blocks = JSON.parse(blocks_stringified);
+                        var contents = blocks[index].data;
+                        console.log("about to decrypt");
+                        decrypt(contents);
+                    }
+                    else {
+                        create_alert("You must upload your private key to decrypt a contract!");
+                    }
 
 
                 }

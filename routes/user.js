@@ -500,7 +500,7 @@ exports.decrypt_contract = function(req, res) {
   try {
     var encrypted_contract = req.body.contents;
      console.log("decrypting this:" + encrypted_contract);
-     console.log("####SESSION PRIVATE KEY:"+ String(req.session.my_private_key) );
+     //console.log("####SESSION PRIVATE KEY:"+ String(req.session.my_private_key) );
     var buffer = new Buffer(encrypted_contract, "base64");
     var decrypted_contract = crypto.privateDecrypt({
       "key": req.session.my_private_key,
