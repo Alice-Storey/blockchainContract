@@ -71,7 +71,7 @@
 
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h3 class="panel-title">Public Key</h3>
+                <h3 class="panel-title">Crypto Keys</h3>
             </div>
             <div class="panel-body">
                 <center>
@@ -84,7 +84,9 @@
                         <div class="row">
                             <!--<div class="col-xs-12 pre-scrollable" style="min-height:45px;max-height:45px;">-->
                             <div class="col-xs-12" style="word-wrap: break-word;">
-                                <h4> <%=String(data[0].public_key)%> </h4>
+                                <h4><div id="public_key_display">
+                                    <%=String(data[0].public_key)%>
+                                </div></h4>
                             </div>
                         </div>
                     </div>
@@ -95,11 +97,17 @@
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <button onclick="generate_keys()" type="button" id="generate_keys" class="btn btn-danger" disabled><i class="icon-hand-right"></i>Generate Keys</button>
+                                        <button style="float: right;" onclick="generate_keys()" type="button" id="generate_keys" class="btn btn-danger" disabled><i class="icon-hand-right"></i>Generate Keys</button>
                                     </div>
                                     <div class="col-md-6">
                                         <input type="checkbox" class="form-check-input" id="generate_confirm" onchange="handle_checkbox()">Reset Key</input>
                                     </div>
+                                </div>
+                                <div class="row">
+                                    <center><h2>
+                                        <div id="key_loader" class="loader hidden"></div>
+                                        <a download="private_key.txt" id="downloadlink" style="display: none"><span class="glyphicon glyphicon-download"aria-hidden="true"></span>Download Private Key</a>
+                                    </center></h2>
                                 </div>
                             </div>
                         </div>
@@ -108,6 +116,9 @@
                 <span class="help-block">
                     <center><i>Warning: resetting your keys means you cannot receive any more contracts sent to this public key.</i></center>
                 </span>
+
+
+
 
             </div>
         </div>
@@ -118,38 +129,65 @@
 </div>
 
 <script>
+    var textFile = null;
+
     $( function() {
         $("#nav_profile").tab("show");
         $("#update_acct_button").prop("disabled",false);
         count_contracts();
     });
 
+    function generate_start(){
+        $("#key_loader").removeClass("hidden");
+        //$("#downloadlink").addClass("hidden");
+        $("#generate_keys").prop("disabled",true);
+        $("#generate_confirm").css("visibility","hidden");
+    }
 
+    function generate_end(){
+        $("#key_loader").addClass("hidden");
+        //$("#downloadlink").removeClass("hidden");
+        $("#generate_confirm").css("visibility","visible");
+        handle_checkbox();
+    }
+
+    var textFile = null,
+    makeTextFile = function (text) {
+        var data = new Blob([text], {type: 'text/plain'});
+
+        // If we are replacing a previously generated file we need to
+        // manually revoke the object URL to avoid memory leaks.
+        if (textFile !== null) {
+          window.URL.revokeObjectURL(textFile);
+        }
+
+        textFile = window.URL.createObjectURL(data);
+
+        return textFile;
+    };
 
     function generate_keys() {
+        generate_start();
         console.log("generating keys");
         var keys_generated = function(data){
+            //data is newly generated private key
             console.log(data);
-            download('private_key.txt', data);
+            download(data.private_key);
+            $("#public_key_display").html(data.public_key);
+            generate_end();
         }
         $.post("/api/1/generate_keys", null, keys_generated);
-
-        location.reload();
     }
 
-    function download(filename, text) {
-      var element = document.createElement('a');
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-      element.setAttribute('download', filename);
+     function download(text) {
+        console.log("Downloading: "+text);
+        var create = document.getElementById('create'),
+        textbox = document.getElementById('textbox');
 
-      element.style.display = 'none';
-      document.body.appendChild(element);
-
-      element.click();
-
-      document.body.removeChild(element);
-    }
-
+        var link = document.getElementById('downloadlink');
+        link.href = makeTextFile(String(text));
+        link.style.display = 'block';
+     }
 
     function handle_checkbox() {
         console.log('checked');
@@ -165,6 +203,8 @@
     function check_changes() {
 
     }
+
+
 
 </script>
  <%- include footer %>

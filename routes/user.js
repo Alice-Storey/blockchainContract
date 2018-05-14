@@ -1,4 +1,3 @@
-var my_private_key;
 //---------------------------------------------signup page call------------------------------------------------------
 exports.signup = function(req, res) {
   message = '';
@@ -9,6 +8,58 @@ exports.signup = function(req, res) {
     var fname = post.first_name;
     var lname = post.last_name;
     var email = post.email;
+
+    if (name.length<1) {
+        res.render('signup', {
+            message: "Error: username left blank.",
+            first:fname,
+            last:lname,
+            email:email,
+            user:name
+        });
+        return;
+    }
+    if (fname.length<1) {
+        res.render('signup', {
+            message: "Error: first name left blank.",
+            first:fname,
+            last:lname,
+            email:email,
+            user:name
+        });
+        return;
+    }
+    if (lname.length<1) {
+        res.render('signup', {
+            message: "Error: last name left blank.",
+            first:fname,
+            last:lname,
+            email:email,
+            user:name
+        });
+        return;
+    }
+    if (email.length<1) {
+        res.render('signup', {
+            message: "Error: email left blank.",
+            first:fname,
+            last:lname,
+            email:email,
+            user:name
+        });
+        return;
+    }
+    if (pass.length<1) {
+        res.render('signup', {
+            message: "Error: password left blank.",
+            first:fname,
+            last:lname,
+            email:email,
+            user:name
+        });
+        return;
+    }
+
 
 
     var find_username = "SELECT id, first_name, last_name, user_name FROM `blockchaincontract`.`users` WHERE `user_name`='" + name + "'";
@@ -34,18 +85,26 @@ exports.signup = function(req, res) {
           } else {
             message = "Account already exists with that email.";
             console.log('Query : ', find_email);
-            res.render('signup.ejs', {
-              message: message
-            });
+            res.render('signup', {
+                message: message,
+                first:fname,
+                last:lname,
+                email:email,
+                user:name
+                });
           }
         });
       } else {
         console.log("result" + result);
         message = "Account already exists with that username.";
         console.log('Query : ', find_username);
-        res.render('signup.ejs', {
-          message: message
-        });
+        res.render('signup', {
+            message: message,
+            first:fname,
+            last:lname,
+            email:email,
+            user:name
+            });
       }
 
 
@@ -53,7 +112,11 @@ exports.signup = function(req, res) {
 
   } else {
     res.render('signup', {
-      message: ""
+      message: "",
+      first:"",
+      last:"",
+      email:"",
+      user:""
     });
   }
 };
@@ -75,9 +138,10 @@ exports.login = function(req, res) {
         message = "";
         req.session.userId = results[0].id;
         req.session.user = results[0];
+        req.session.my_private_key = "";
         console.log(results[0].id);
         res.render('dashboard.ejs', {
-          message: message
+          message: ""
         });
       } else {
         console.log('Query : ', sql);
@@ -133,7 +197,7 @@ exports.received = function(req, res, next) {
   db.query(sql, function(err, results) {
     res.render('received.ejs', {
       user: user,
-      private_key: my_private_key
+      private_key: req.session.my_private_key
     });
   });
 
@@ -153,18 +217,18 @@ exports.load_contracts = function(req, res, next) {
             console.log("fetching");
             if (!error && response.statusCode === 200) { //statuscode 200 is good!
               console.log("200");
-              console.log(body); // Print the json response - will be entire chain
+              //console.log(body); // Print the json response - will be entire chain
               var sql = "SELECT * FROM `blockchaincontract`.`users` WHERE `id`='" + userId + "'";
               console.log(sql);
               db.query(sql, function(err, sql_result) {
                   var public_key = sql_result[0].public_key;
-                  console.log("getting user - "+sql_result[0].user_name);
-                  console.log("getting user's key - "+sql_result[0].public_key);
+                  //console.log("getting user - "+sql_result[0].user_name);
+                  //console.log("getting user's key - "+sql_result[0].public_key);
 
                   res.send(body.filter(function(block) { //send filtered list
-                      console.log("block:"+JSON.stringify(block) );
-                      console.log("filtering blocks - block is key:"+block.publicKey);
-                      console.log("filtering blocks - user is key:"+public_key);
+                     // console.log("block:"+JSON.stringify(block) );
+                     // console.log("filtering blocks - block is key:"+block.publicKey);
+                     // console.log("filtering blocks - user is key:"+public_key);
                     return block.publicKey == public_key; //test used for filter
                   }));
 
@@ -189,18 +253,18 @@ exports.num_contracts = function(req, res, next) {
           console.log("fetching");
           if (!error && response.statusCode === 200) { //statuscode 200 is good!
             console.log("200");
-            console.log(body); // Print the json response - will be entire chain
+            //console.log(body); // Print the json response - will be entire chain
             var sql = "SELECT * FROM `blockchaincontract`.`users` WHERE `id`='" + userId + "'";
             console.log(sql);
             db.query(sql, function(err, sql_result) {
                 var public_key = sql_result[0].public_key;
-                console.log("getting user - "+sql_result[0].user_name);
-                console.log("getting user's key - "+sql_result[0].public_key);
+                //console.log("getting user - "+sql_result[0].user_name);
+                //console.log("getting user's key - "+sql_result[0].public_key);
 
                 res.send(body.filter(function(block) { //send filtered list
-                    console.log("block:"+JSON.stringify(block) );
-                    console.log("filtering blocks - block is key:"+block.publicKey);
-                    console.log("filtering blocks - user is key:"+public_key);
+                    //console.log("block:"+JSON.stringify(block) );
+                    //console.log("filtering blocks - block is key:"+block.publicKey);
+                    //console.log("filtering blocks - user is key:"+public_key);
                   return block.publicKey == public_key; //test used for filter
               }));
 
@@ -209,30 +273,6 @@ exports.num_contracts = function(req, res, next) {
           else{console.log(error);}
       }
   );
-}
-
-
-
-exports.sign_contract = function(req, res, next) {
-  var user = req.session.user,
-    userId = req.session.userId;
-  console.log('userId=' + userId);
-
-  var sign_index = req.body.index; //index on chain to be signed
-  var private_key = req.body.private_key;
-  //var private_key = String(req.body.private_key); //alternate
-
-  console.log("signing block " + sign_index + " with private key " + String(private_key));
-  var success = true;
-  var statusCode = "150";
-
-  //do thing here to sign
-
-  if (success) {} else {
-    statuscode = 350;
-  }
-
-  res.send(statusCode);
 }
 
 //-----------------------------------------------send page functionality----------------------------------------------
@@ -246,6 +286,12 @@ exports.send = function(req, res, next) {
     //var upload = multer(); // for parsing multipart/form-data
     var post = req.body;
     var recipient = post.recipients;
+
+    if (!req.files.length){
+        res.render("send.ejs", {message:"Error: No file selected."} );
+        return;
+    }
+
     var file = req.files[0].buffer;
     var filesize = req.files[0].size;
 
@@ -279,6 +325,17 @@ exports.send = function(req, res, next) {
     //   console.log("sending to uid " + recipient);
     //   console.log(req);
     console.log("recipient is:" + recipient);
+    if (recipient == -1){
+        res.render("send.ejs", {message:"Error: Recipient was not selected."} );
+        return;
+    }
+
+    if (filesize > 512000) {
+        res.render("send.ejs", {message:"Error: File too large."} );
+        return;
+    }
+
+
     var sql = "SELECT * FROM `blockchaincontract`.`users` WHERE `id`='" + recipient + "' order by last_name asc limit 1";
     //
     //   var public_key = 0;
@@ -439,22 +496,6 @@ exports.profile = function(req, res) {
   });
 };
 
-//---------------------------------edit users details after login----------------------------------
-exports.editprofile = function(req, res) {
-  var userId = req.session.userId;
-  if (userId == null) {
-    res.redirect("/login");
-    return;
-  }
-
-  var sql = "SELECT * FROM `blockchaincontract`.`users` WHERE `id`='" + userId + "'";
-  db.query(sql, function(err, results) {
-    res.render('edit_profile.ejs', {
-      data: results
-    });
-  });
-};
-
 exports.generate_keys = function(req, res) {
   console.log("generating keys");
   var userId = req.session.userId;
@@ -474,7 +515,7 @@ exports.generate_keys = function(req, res) {
   var sql = "UPDATE users SET public_key = '" + public_key + "' WHERE id=" + userId;
 
   db.query(sql, function(err, results) {
-    res.send(private_key);
+    res.send( {private_key, public_key} );
     // console.log("Private Key : " + err + sql);
   });
 
@@ -499,9 +540,10 @@ exports.decrypt_contract = function(req, res) {
   try {
     var encrypted_contract = req.body.contents;
      console.log("decrypting this:" + encrypted_contract);
+     //console.log("####SESSION PRIVATE KEY:"+ String(req.session.my_private_key) );
     var buffer = new Buffer(encrypted_contract, "base64");
     var decrypted_contract = crypto.privateDecrypt({
-      "key": my_private_key,
+      "key": req.session.my_private_key,
       padding: constants.RSA_PKCS1_PADDING
     }, buffer);
     var decrypted_contract = decrypted_contract.toString("utf8");
@@ -510,7 +552,7 @@ exports.decrypt_contract = function(req, res) {
   }
   catch (error) {
     console.log(error);
-    console.log("error encountered, returning contents:" + String(req.body.contents) );
+    console.log("error encountered, returning contents still encrypted:" + String(req.body.contents) );
     res.send( String(req.body.contents) );
   }
 };
@@ -529,10 +571,14 @@ exports.upload_private_key = function(req, res, next){
     //var file = req.file.buffer;
     var filesize = req.files[0].size;
 
-    console.log("uploaded private key:" + file);
-    my_private_key = file;
-    console.log("saved: "+my_private_key);
-    res.render("received.ejs", {message:"Private key uploaded successfully.",private_key: my_private_key});
+    //console.log("uploaded private key:" + file);
+    req.session.my_private_key = String(file);
+    //console.log("saved: "+req.session.my_private_key);
+    res.render("received.ejs", {message:"Private key uploaded successfully.",private_key: req.session.my_private_key});
 
 
-}
+};
+
+exports.session_has_private_key = function(req, res, next){
+    res.send(req.session.my_private_key.length > 1);
+};
