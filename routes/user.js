@@ -291,7 +291,7 @@ exports.send = function(req, res, next) {
         return;
     }
 
-    if (filesize > 511) {
+    if (filesize > 512000) {
         res.render("send.ejs", {message:"Error: File too large."} );
         return;
     }

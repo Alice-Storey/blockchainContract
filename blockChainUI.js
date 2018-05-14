@@ -2,7 +2,9 @@
 * Module dependencies.
 */
 var multer = require('multer'); // v1.0.5
-var upload = multer(); // for parsing multipart/form-data
+var upload = multer({
+  limits: { fileSize: 512000 }
+}); // for parsing multipart/form-data
 
 var express = require('express')
   , routes = require('./routes')
