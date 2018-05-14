@@ -1,4 +1,3 @@
-var my_private_key;
 //---------------------------------------------signup page call------------------------------------------------------
 exports.signup = function(req, res) {
   message = '';
@@ -210,30 +209,6 @@ exports.num_contracts = function(req, res, next) {
           else{console.log(error);}
       }
   );
-}
-
-
-
-exports.sign_contract = function(req, res, next) {
-  var user = req.session.user,
-    userId = req.session.userId;
-  console.log('userId=' + userId);
-
-  var sign_index = req.body.index; //index on chain to be signed
-  var private_key = req.body.private_key;
-  //var private_key = String(req.body.private_key); //alternate
-
-  console.log("signing block " + sign_index + " with private key " + String(private_key));
-  var success = true;
-  var statusCode = "150";
-
-  //do thing here to sign
-
-  if (success) {} else {
-    statuscode = 350;
-  }
-
-  res.send(statusCode);
 }
 
 //-----------------------------------------------send page functionality----------------------------------------------
@@ -457,22 +432,6 @@ exports.profile = function(req, res) {
   });
 };
 
-//---------------------------------edit users details after login----------------------------------
-exports.editprofile = function(req, res) {
-  var userId = req.session.userId;
-  if (userId == null) {
-    res.redirect("/login");
-    return;
-  }
-
-  var sql = "SELECT * FROM `blockchaincontract`.`users` WHERE `id`='" + userId + "'";
-  db.query(sql, function(err, results) {
-    res.render('edit_profile.ejs', {
-      data: results
-    });
-  });
-};
-
 exports.generate_keys = function(req, res) {
   console.log("generating keys");
   var userId = req.session.userId;
@@ -548,9 +507,9 @@ exports.upload_private_key = function(req, res, next){
     //var file = req.file.buffer;
     var filesize = req.files[0].size;
 
-    console.log("uploaded private key:" + file);
+    //console.log("uploaded private key:" + file);
     req.session.my_private_key = String(file);
-    console.log("saved: "+req.session.my_private_key);
+    //console.log("saved: "+req.session.my_private_key);
     res.render("received.ejs", {message:"Private key uploaded successfully.",private_key: req.session.my_private_key});
 
 

@@ -64,7 +64,6 @@ app.get('/home/profile',user.profile);//to render users profile
 app.post('/home/profile', upload.any(),user.profile);
 app.post('/api/1/load_recipients', user.load_recipients);
 app.post('/api/1/load_contracts', user.load_contracts);
-app.post('/api/1/sign_contract', user.sign_contract);
 app.post('/api/1/generate_keys', user.generate_keys);
 app.post('/api/1/num_contracts', user.num_contracts);
 app.post('/api/1/upload_private_key', upload.any(), user.upload_private_key);
