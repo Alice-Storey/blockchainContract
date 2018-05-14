@@ -78,7 +78,11 @@ exports.signup = function(req, res) {
               message = "Your account has been created.";
               console.log('Query : ', sql);
               res.render('signup.ejs', {
-                message: message
+                message: message,
+                first:fname,
+                last:lname,
+                email:email,
+                user:name
               });
             });
 
@@ -154,7 +158,7 @@ exports.login = function(req, res) {
     });
   } else {
     res.render('index.ejs', {
-      message: message
+      message: ""
     });
   }
 
@@ -175,6 +179,7 @@ exports.dashboard = function(req, res, next) {
 
   db.query(sql, function(err, results) {
     res.render('dashboard.ejs', {
+      message:"",
       user: user
     });
   });
