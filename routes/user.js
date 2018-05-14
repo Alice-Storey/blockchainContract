@@ -247,6 +247,12 @@ exports.send = function(req, res, next) {
     //var upload = multer(); // for parsing multipart/form-data
     var post = req.body;
     var recipient = post.recipients;
+
+    if (!req.files.length){
+        res.render("send.ejs", {message:"Error: No file selected."} );
+        return;
+    }
+
     var file = req.files[0].buffer;
     var filesize = req.files[0].size;
 
@@ -284,6 +290,13 @@ exports.send = function(req, res, next) {
         res.render("send.ejs", {message:"Error: Recipient was not selected."} );
         return;
     }
+
+    if (filesize > 511) {
+        res.render("send.ejs", {message:"Error: File too large."} );
+        return;
+    }
+
+
     var sql = "SELECT * FROM `blockchaincontract`.`users` WHERE `id`='" + recipient + "' order by last_name asc limit 1";
     //
     //   var public_key = 0;
