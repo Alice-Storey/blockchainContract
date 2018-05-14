@@ -97,7 +97,7 @@
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <button onclick="generate_keys()" type="button" id="generate_keys" class="btn btn-danger" disabled><i class="icon-hand-right"></i>Generate Keys</button>
+                                        <button style="float: right;" onclick="generate_keys()" type="button" id="generate_keys" class="btn btn-danger" disabled><i class="icon-hand-right"></i>Generate Keys</button>
                                     </div>
                                     <div class="col-md-6">
                                         <input type="checkbox" class="form-check-input" id="generate_confirm" onchange="handle_checkbox()">Reset Key</input>
@@ -140,11 +140,15 @@
     function generate_start(){
         $("#key_loader").removeClass("hidden");
         $("#downloadlink").addClass("hidden");
+        $("#generate_keys").prop("disabled",true);
+        $("#generate_confirm").css("visibility","hidden");
     }
 
     function generate_end(){
         $("#key_loader").addClass("hidden");
         $("#downloadlink").removeClass("hidden");
+        $("#generate_confirm").css("visibility","visible");
+        handle_checkbox();
     }
 
     var textFile = null,
