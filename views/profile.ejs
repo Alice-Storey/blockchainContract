@@ -139,14 +139,14 @@
 
     function generate_start(){
         $("#key_loader").removeClass("hidden");
-        $("#downloadlink").addClass("hidden");
+        //$("#downloadlink").addClass("hidden");
         $("#generate_keys").prop("disabled",true);
         $("#generate_confirm").css("visibility","hidden");
     }
 
     function generate_end(){
         $("#key_loader").addClass("hidden");
-        $("#downloadlink").removeClass("hidden");
+        //$("#downloadlink").removeClass("hidden");
         $("#generate_confirm").css("visibility","visible");
         handle_checkbox();
     }
@@ -172,14 +172,15 @@
         var keys_generated = function(data){
             //data is newly generated private key
             console.log(data);
-            download(data[0]);
-            $("#public_key_display").html(data[1]);
+            download(data.private_key);
+            $("#public_key_display").html(data.public_key);
             generate_end();
         }
         $.post("/api/1/generate_keys", null, keys_generated);
     }
 
      function download(text) {
+        console.log("Downloading: "+text);
         var create = document.getElementById('create'),
         textbox = document.getElementById('textbox');
 
