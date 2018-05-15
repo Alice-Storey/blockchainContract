@@ -105,7 +105,6 @@
         var data_refreshed = function(data){
             console.log(data);
             data.forEach( function(user){
-
                 var dropentry = "<option value='"+user.id+"' id='uid"+user.id+"'>"+user.email+"</option>";
 
                 $("#recipients").append(dropentry);

@@ -63,19 +63,14 @@ How to install NodeJS
   Step 1: curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
   Step 2: sudo apt-get install -y nodejs
   Step 3: sudo apt install npm
-  Step 4: Go into the directory of the project. Run 'npm install' and it will install all the dependencies of the program
-  Step 5: Run 'node blockChainServer.js'
-  Step 6: Run 'node blockChainUI.js'
-```
-### Mac Only
-How to install NodeJS
-```
-
-```
-
-### Windows only
-```
-
+  Step 4: apt install mysql
+  Step 5: mysql -u root
+  Step 6: cd database_script/
+  Step 7: mysql -u root < create_db.sql
+  Step 8: mysql -u root < create_tables.sql
+  Step 9: Go into the directory of the project. Run 'npm install' and it will install all the dependencies of the program
+  Step 10: Run 'node blockChainServer.js'
+  Step 11: Run 'node blockChainUI.js'
 ```
 
 ## Example
