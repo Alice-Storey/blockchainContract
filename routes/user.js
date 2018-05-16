@@ -78,7 +78,11 @@ exports.signup = function(req, res) {
               message = "Your account has been created.";
               console.log('Query : ', sql);
               res.render('signup.ejs', {
-                message: message
+                message: message,
+                first:fname,
+                last:lname,
+                email:email,
+                user:name
               });
             });
 
@@ -154,7 +158,7 @@ exports.login = function(req, res) {
     });
   } else {
     res.render('index.ejs', {
-      message: message
+      message: ""
     });
   }
 
@@ -175,6 +179,7 @@ exports.dashboard = function(req, res, next) {
 
   db.query(sql, function(err, results) {
     res.render('dashboard.ejs', {
+      message:"",
       user: user
     });
   });
@@ -197,7 +202,8 @@ exports.received = function(req, res, next) {
   db.query(sql, function(err, results) {
     res.render('received.ejs', {
       user: user,
-      private_key: req.session.my_private_key
+      private_key: req.session.my_private_key,
+      message:""
     });
   });
 
@@ -265,7 +271,7 @@ exports.num_contracts = function(req, res, next) {
                     //console.log("block:"+JSON.stringify(block) );
                     //console.log("filtering blocks - block is key:"+block.publicKey);
                     //console.log("filtering blocks - user is key:"+public_key);
-                  return block.publicKey == public_key; //test used for filter
+                  return (block.publicKey == public_key) ; //test used for filter
               }));
 
               });
@@ -442,7 +448,9 @@ exports.load_recipients = function(req, res, next) {
   var sql = "SELECT * FROM `blockchaincontract`.`users` WHERE `id`<>'" + userId + "' order by last_name asc";
 
   db.query(sql, function(err, results) {
-    res.send(results);
+    res.send(results.filter(function(rec){
+      return rec.public_key != null && String(rec.public_key).length > 15;
+    }));
   });
 };
 
